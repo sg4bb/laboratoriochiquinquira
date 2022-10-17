@@ -1,0 +1,69 @@
+<html>
+
+
+
+<head>
+    <title>Sign In</title>
+
+    <!--JQUERY-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- FRAMEWORK BOOTSTRAP para el estilo de la pagina-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Los iconos tipo Solid de Fontawesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
+    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+    <!-- Otro tipo de fontawesome-->
+    <script src="https://kit.fontawesome.com/80e990db18.js" crossorigin="anonymous"></script>
+
+    <!-- Nuestro css-->
+    <link rel="stylesheet" type="text/css" href="static/css/fondo.css" th:href="@{/css/fondo.css}">
+
+</head>
+
+{% extends "layout.html" %}
+
+<body>
+
+    {% block content %}
+
+    <div class="modal-dialog text-center">
+            <div class="col-sm-8 main-section">
+                <div class="modal-content">
+                    <div class="col-12 user-imag"> 
+                        <img src="static/img/user.png"/> 
+                    </div>
+                    
+                    <form class="col-12">
+
+                        <div class="form-group" id="user-group"> 
+                            <i class="fa-solid fa-user fa-user fa-usericon"></i><input type="text" class="form-control" placeholder="Nombre de usuario">
+                        </div>
+
+                        <div class="form-group" id="contrasena-group">
+                            <i class="fa-solid fa-lock fa-passwordicon"></i></i><input type="password" class="form-control" placeholder="Contraseña">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
+                    </form>
+
+                    <div class="col-12 forgot">
+                        <a href="#">¿Olvidó su contraseña?</a> 
+                        <br>
+                        <a href="#">¿No tienes cuenta? Regístrate</a>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+
+    {% endblock %}
+
+</body>
+
+
+
+</html>

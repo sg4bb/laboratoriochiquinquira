@@ -1,0 +1,57 @@
+<html>
+
+
+
+<head>
+    <title>Bienvenido al Laboratorio Chiquinquirá</title>
+
+    
+
+
+    <!-- Boostrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
+    <!-- Herencia del archivo CSS-->
+    <link rel="stylesheet" href="{{  url_for('static' , filename ='css/main.css')  }}">
+
+    
+</head>
+
+{% extends "layout.html" %}
+
+<body>
+
+    {% block content %}
+
+    <div class="container p-4">
+
+        <div class="jumbotron" id="textohome">
+            <h1 class="display-5">Laboratorio Chiquinquira</h1>
+            <p class="lead">Compromiso, Excelencia y Honestidad son nuestras bases para infundir una nueva sociedad.
+
+                
+            </p>
+            
+
+            <div class="position-relative d-flex flex-items-center pb-2 f6 color-fg-muted border-top color-border-muted flex-column-reverse flex-lg-row flex-wrap flex-lg-nowrap mt-6 pt-6" id="firma">
+                <div class="list-style-none d-flex flex-wrap col-0 col-lg-2 flex-justify-start flex-lg-justify-between mb-2 mb-lg-0">
+                    <div class="mt-2 mt-lg-0 d-flex flex-items-center">
+                        <a aria-label="Homepage" title="Laboratorio Chiquinquirá" class="footer-octicon mr-2" href="#">
+                        </a> <span>
+                             Gabriel Serra © 2022
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    {% endblock %}
+
+</body>
+
+</html>
