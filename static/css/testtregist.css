@@ -1,0 +1,31 @@
+body{
+    background: url(../img/backgroundd.jpg) no-repeat center center fixed ;
+    background-size: cover;
+}
+
+body {
+    height: 100%;
+}
+
+
+.fa-genre{
+    position: relative;
+    left: 290px;
+    top: -47px;
+}
+
+.fa-suffix{
+    position: relative;
+    top: -14px;
+}
+
+.fa-cellphone {
+    position: absolute;
+    right: 20px;
+    left: 320px;
+    padding-top: 464px;
+}
+
+.container {
+    max-width: 960px;
+  }

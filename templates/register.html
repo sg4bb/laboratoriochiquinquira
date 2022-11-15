@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sign In</title>
+
+    <!--JQUERY-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- FRAMEWORK BOOTSTRAP para el estilo de la pagina-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Los iconos tipo Solid de Fontawesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
+    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+    <!-- Otro tipo de fontawesome-->
+    <script src="https://kit.fontawesome.com/80e990db18.js" crossorigin="anonymous"></script>
+
+    <!-- Nuestro css-->
+    <link rel="stylesheet" type="text/css" href="static/css/fondoregister.css" th:href="@{/css/fondoregister.css}">
+
+</head>
+
+{% extends "layout-backup.html" %}
+
+<body>
+
+
+    {% block content %}
+
+    <div class="container tops">
+        <div class="modal-dialog text-center">
+            <div class="col-sm-5 main-section">
+                <div class="modal-content">
+                    <div class="col-12 user-imag">
+                        <img src="static/img/user.png" />
+                    </div>
+
+                    <form action="/add_user" method="POST" class="col-12">
+
+                        <div class="form-group" id="usuario-group">
+                            <input type="text" name="user" class="form-control" placeholder="Usuario">
+                        </div>
+
+                        <div class="form-group" id="contrasena-group">
+                            <input type="password" name="password" class="form-control" placeholder="Contraseña">
+                        </div>
+
+                        <div class="form-group" id="fullname-group">
+                            <input type="text" name="fullname" class="form-control" placeholder="Nombre y Apellido">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary buttomsiguiente"><i class="fas fa-sign-in-alt"></i>
+                            Siguiente</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="position-relative d-flex flex-items-center pb-2 f6 color-fg-muted border-top color-border-muted flex-column-reverse flex-lg-row flex-wrap flex-lg-nowrap mt-6 pt-6"
+        style="color: #ddd; position: absolute; margin-top: 400px;" id="firma">
+        <div
+            class="list-style-none d-flex flex-wrap col-0 col-lg-2 flex-justify-start flex-lg-justify-between mb-2 mb-lg-0">
+            <div class="mt-2 mt-lg-0 d-flex flex-items-center">
+                <a aria-label="Homepage" title="Laboratorio Chiquinquirá" class="footer-octicon mr-2" href="#">
+                </a> <span>
+                    Gabriel Serra © 2022
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+</body>
+
+
+
+</html>

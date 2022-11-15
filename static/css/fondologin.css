@@ -10,6 +10,20 @@ body{
     padding: 0;
 }
 
+.tops{
+    margin-top: 100px;
+}
+
+#firma{
+    position:absolute;
+    z-index:1;
+    top:-10px;
+}
+
+.firma a{
+    color:white;
+}
+
 .modal-content{
     background-color: #3b4652;
     opacity: .85;
@@ -60,10 +74,7 @@ body{
     top:71px;
 }
 
-button{
-    width: 60%;
-    margin: 5px 0 25px;
-}
+
 
 .forgot{
     padding: 2px 0 ;
@@ -72,3 +83,6 @@ button{
 .forgot a{
     color: white;
 }
+
+
+
