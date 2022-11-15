@@ -3,4 +3,4 @@ Sistema de información para el Laboratorio Chinquinquirá , Usado como tesis pa
 
 Problemas que tengo:
 
-- Navbar desproporcionada.
+Login, Navbar, Register no son responsivos.
