@@ -15,14 +15,14 @@
     <!-- Herencia del archivo CSS-->
     <link rel="stylesheet" href="{{  url_for('static' , filename ='css/mainabout.css')  }}">
 
-    {% extends "layout.html" %}
+    {% extends "layout-backup.html" %}
 
 </head>
 
 <body>
 
     {% block content %}
-    <div class="container p-4">
+    <div class="container tops p-4">
 
 
 
@@ -32,21 +32,25 @@
                 mejores servicios con una alta calidad para así poder hacer del rubro de la salud un área mucho más
                 segura para todos los pacientes que necesitan de ayuda en el país.
             </p>
-         
 
-            <div class="position-relative d-flex flex-items-center pb-2 f6 color-fg-muted border-top color-border-muted flex-column-reverse flex-lg-row flex-wrap flex-lg-nowrap mt-6 pt-6" id="firma">
-                <div class="list-style-none d-flex flex-wrap col-0 col-lg-2 flex-justify-start flex-lg-justify-between mb-2 mb-lg-0">
+
+            <div class="position-relative d-flex flex-items-center pb-2 f6 color-fg-muted border-top color-border-muted flex-column-reverse flex-lg-row flex-wrap flex-lg-nowrap mt-6 pt-6"
+                id="firma" style="position: absolute; margin-top: 370px;">
+                <div
+                    class="list-style-none d-flex flex-wrap col-0 col-lg-2 flex-justify-start flex-lg-justify-between mb-2 mb-lg-0">
                     <div class="mt-2 mt-lg-0 d-flex flex-items-center">
                         <a aria-label="Homepage" title="Laboratorio Chiquinquirá" class="footer-octicon mr-2" href="#">
                         </a> <span>
-                             Gabriel Serra © 2022
+                            Gabriel Serra © 2022
                         </span>
                     </div>
                 </div>
             </div>
 
         </div>
-        {% endblock %}
+    </div>
+
+    {% endblock %}
 
 </body>
 

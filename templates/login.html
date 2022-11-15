@@ -1,8 +1,12 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Sign In</title>
 
     <!--JQUERY-->
@@ -16,49 +20,124 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
     <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
 
+    <!-- Prueba para el Toastr -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <!-- Otro tipo de fontawesome-->
     <script src="https://kit.fontawesome.com/80e990db18.js" crossorigin="anonymous"></script>
 
     <!-- Nuestro css-->
-    <link rel="stylesheet" type="text/css" href="static/css/fondo.css" th:href="@{/css/fondo.css}">
+    <link rel="stylesheet" type="text/css" href="static/css/fondologin.css" th:href="@{/css/fondologin.css}">
 
 </head>
 
-{% extends "layout.html" %}
+{% extends "layout-test.html" %}
 
 <body>
 
     {% block content %}
 
-    <div class="modal-dialog text-center">
+    <!-- Comprobacion de si se hizo un registro previamente -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div id="toast3" class="toast" role="alert" aria-live = "assertive" aria-atomic="true" data-delay="2500" style="position: absolute; top: 100px; right: 10px;">
+        <div class="toast-header">
+            <svg class="bd-placeholder-img rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
+                <rect width="100%" height="100%" fill="{{message[40:]}}"></rect>
+            </svg>
+            <strong class="mr-auto">{{message[0:7]}}</strong>
+            <small>justo ahora</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            {{message[9:39]}}
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="container tops">
+        <div class="modal-dialog text-center">
             <div class="col-sm-8 main-section">
                 <div class="modal-content">
-                    <div class="col-12 user-imag"> 
-                        <img src="static/img/user.png"/> 
+                    <div class="col-12 user-imag">
+                        <img src="static/img/user.png" />
                     </div>
-                    
-                    <form class="col-12">
 
-                        <div class="form-group" id="user-group"> 
-                            <i class="fa-solid fa-user fa-user fa-usericon"></i><input type="text" class="form-control" placeholder="Nombre de usuario">
+                    <form action="/check_user" method="POST" class="col-12">
+
+                        <div class="form-group" id="user-group">
+                            <i class="fa-solid fa-user fa-user fa-usericon"></i><input type="text" name="user"
+                                class="form-control" placeholder="Nombre de usuario">
                         </div>
 
                         <div class="form-group" id="contrasena-group">
-                            <i class="fa-solid fa-lock fa-passwordicon"></i></i><input type="password" class="form-control" placeholder="Contraseña">
+                            <i class="fa-solid fa-lock fa-passwordicon"></i><input type="password" name="password"
+                                class="form-control" placeholder="Contraseña">
                         </div>
 
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>
+                            Ingresar</button>
                     </form>
 
                     <div class="col-12 forgot">
-                        <a href="#">¿Olvidó su contraseña?</a> 
+                        <a href="#">¿Olvidó su contraseña?</a>
                         <br>
-                        <a href="#">¿No tienes cuenta? Regístrate</a>
+                        <a href="/register">¿No tienes cuenta? Regístrate</a>
                     </div>
 
                 </div>
             </div>
+        </div>
     </div>
+
+    <div class="position-relative d-flex flex-items-center pb-2 f6 color-fg-muted border-top color-border-muted flex-column-reverse flex-lg-row flex-wrap flex-lg-nowrap mt-6 pt-6"
+        style="color: #ddd; position: absolute; margin-top: 400px;" id="firma">
+        <div
+            class="list-style-none d-flex flex-wrap col-0 col-lg-2 flex-justify-start flex-lg-justify-between mb-2 mb-lg-0">
+            <div class="mt-2 mt-lg-0 d-flex flex-items-center">
+                <a aria-label="Homepage" title="Laboratorio Chiquinquirá" class="footer-octicon mr-2" href="#">
+                </a> <span>
+                    Gabriel Serra © 2022
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.toast').toast('show');
+
+
+            $("#btnToasts").click(function () {
+                $("#toast1").toast('show');
+            });
+
+
+            $("#btnOcultar").click(function () {
+                $("#toast1").toast('hide');
+            });
+        });
+    </script>
 
     {% endblock %}
 

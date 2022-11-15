@@ -4,12 +4,13 @@ body{
 
     background: url(../img/backgroundd.jpg) no-repeat center center fixed ;
     background-size: cover;
-    color:white;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 
 }
 
-
+.tops{
+    margin-top: 100px;
+}
 
 #textohome{
     color:white;
@@ -26,6 +27,6 @@ body{
 #firma{
     position:absolute;
     z-index:1;
-    top:400px;
+    top:370px;
 }
 
