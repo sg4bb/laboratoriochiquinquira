@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Examenes</title>
+</head>
+
+{% extends "layout-user.html" %}
+
+<body>
+    {% block content %}
+
+
+    <div class="col-md-2" style="padding-left: 20px; margin-top: 50px;" id="SelectFilter">
+        <form action="/labtest" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="container" style="display:flex;">
+                <div class="container1">
+                    <select class="form-select" name="filteroption">
+                        <option value="">Filtrado por....</option>
+                        <option value="1">Globulos Rojos</option>
+                        <option value="2">Globulos Blancos</option>
+                        <option value="3">Emoglobina</option>
+                        <option value="4">Hematocritos</option>
+                        <option value="5">Plaquetas</option>
+                        <option value="6">VCM</option>
+                        <option value="7">HCM</option>
+                        <option value="8">CHCM</option>
+                    </select>
+                </div>
+    
+                <div class="container2 col-md-1 px-2">
+                    <button class="btn btn-outline-primary" type="submit" id="boton"><i class="fa-sharp fa-solid fa-rocket"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="pb-1 mb-1 py-2 border-bottom"></div>
+
+    <div class="container-fluid py-2 pt-lg-5 text-dark" style="margin-bottom: 20px;">
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <h2>Exámenes realizados</h2>
+    <div class="table-responsive">
+        <table class="table table-striped-columns table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Fecha</th>
+                    {% if valore == '1' %}
+                    <th scope="col">Globulos Rojos</th>
+                    {% endif %}
+
+                    {% if valore == '2' %}
+                    <th scope="col">Globulos Blancos</th>
+                    {% endif %}
+
+                    {% if valore == '3' %}
+                    <th scope="col">Emoglobina</th>
+                    {% endif %}
+
+                    {% if valore == '4' %}
+                    <th scope="col">Hematocritos</th>
+                    {% endif %}
+
+                    {% if valore == '5' %}
+                    <th scope="col">Plaquetas</th>
+                    {% endif %}
+
+                    {% if valore == '6' %}
+                    <th scope="col">VCM</th>
+                    {% endif %}
+
+                    {% if valore == '7' %}
+                    <th scope="col">HCM</th>
+                    {% endif %}
+
+                    {% if valore == '8' %}
+                    <th scope="col">CHCM</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for filtervalue in filters %}
+                <tr>
+                    <td>{{ filtervalue.0 }}</td>
+                    <td>{{ filtervalue.1 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        let valuesX = JSON.parse({{ valoresX | tojson }});
+        let valuesY = JSON.parse({{ valoresY | tojson }});
+
+        
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: valuesX,
+                datasets: [{
+                    label: 'Valor desconocido',
+                    data: valuesY,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+    </script>
+    {% endblock %}
+
+    {% endblock %}
+</body>
+
+</html>

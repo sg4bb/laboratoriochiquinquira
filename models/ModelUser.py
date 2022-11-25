@@ -3,7 +3,9 @@ import string
 
 class ModelUser():
 
-        #Metodo para logearse
+# Usuario (Login y Register)
+
+    #Metodo para logearse
     @classmethod  
     def login(self, db, user):
         try:
@@ -98,3 +100,151 @@ class ModelUser():
                 break
             
         return False
+
+    #Metodo para chequear el privilegio.
+    @classmethod
+    def checkprivilege(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT iduser, privilege FROM user_privilege WHERE iduser = '{}'".format(iduser)
+
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+# Examenes
+    @classmethod
+    def consultexam(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT fecexam, tipexam, globulos_rojos, globulos_blancos, emoglobina, hematocrito, plaquetas, vcm, hcm, chcm, docexam FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    @classmethod
+    def consultvalor(self, db, valor, iduser):
+        try:
+            cursor = db.connection.cursor()
+
+            # si toca '1' desea filtrar Globulos Rojos.
+            if valor == '1' :
+                print('llegue hasta aqui')
+                sql = "SELECT fecexam, globulos_rojos FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            # si toca '2' desea filtrar globulos blancos.
+            if valor == '2' :
+                sql = "SELECT fecexam, globulos_blancos FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            # si toca '3' desea filtrar Emoglobina.
+            if valor == '3' :
+                sql = "SELECT fecexam, emoglobina FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            # si toca '4' desea filtrar hematocritos.
+            if valor == '4' :
+                sql = "SELECT fecexam, hematocrito FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            # si toca '5' desea filtrar Plaquetas.
+            if valor == '5' :
+                sql = "SELECT fecexam, plaquetas FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            # si toca '6' desea filtrar VCM.
+            if valor == '6' :
+                sql = "SELECT fecexam, vcm FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            # si toca '7' desea filtrar HCM.
+            if valor == '7' :
+                sql = "SELECT fecexam, hcm FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+
+            # si toca '6' desea filtrar CHCM.
+            if valor == '8' :
+                sql = "SELECT fecexam, chcm FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(iduser)
+            
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row   
+        except Exception as ex:
+            raise Exception(ex)
+    
+
+#Solicitudes
+    #Agregar
+    @classmethod
+    def newsolic(self, db, iduser, tipo, fecha, acotacion, status):
+        try:
+            cursor = db.connection.cursor()
+            sql = "INSERT INTO citas_solic (iduser, tipexam, fecha_solic, acotaci_solic, statusnamesolic) VALUES ('{0}','{1}','{2}','{3}','{4}')".format(iduser, tipo, fecha, acotacion, status)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    #Consultar para la tabla normal
+    @classmethod
+    def consultsolictable(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT numsolic, fecha_solic, tipexam, acotaci_solic FROM citas_solic WHERE iduser = '{}' AND statusnamesolic = '2' ORDER BY fecha_solic DESC".format(iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    #Borrar
+    @classmethod
+    def deletesolic(self, db, numsolic, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "DELETE FROM citas_solic WHERE iduser = '{0}' AND numsolic = '{1}'".format(iduser, numsolic)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+    
+    # Consultar para editar
+    @classmethod
+    def consultsolicedit(self, db, numsolic, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT numsolic, fecha_solic, tipexam, acotaci_solic FROM citas_solic WHERE iduser = '{0}' AND numsolic = '{1}'".format(iduser, numsolic)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    #Updatear una solicitud de cita
+    @classmethod
+    def updatesolic(self, db, tipo, fecha, acotacion, numsolic, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = """
+                UPDATE citas_solic
+                SET tipexam       = '{0}',
+                    fecha_solic   = '{1}',
+                    acotaci_solic = '{2}'
+                WHERE iduser = '{3}' 
+                AND   numsolic = '{4}'
+            """.format(tipo, fecha, acotacion, iduser, numsolic)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
