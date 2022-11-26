@@ -250,7 +250,6 @@ def editsolic(numsolic):
 def update(numsolic):
     if request.method == 'POST':
         ModelUser.updatesolic(db, request.form['tipo'], request.form['fecha'], request.form['acotaciones'], numsolic, current_user.get_id())
-    
         flash("Bien!    Solicitud de Cita actualizada correctamente.")
         return (redirect(url_for('requestdate')))
     else:
@@ -269,9 +268,21 @@ def status_404(error):
     return "<h1>Pagina no encontrada.</h1>" , 404
 
 # -- Ruta para propositos de testeos.
-@app.route('/test')
+@app.route('/test', methods=['GET','POST'])
 def test():
-    return render_template('test.html')
+    if request.method == 'POST':
+
+        tipo = request.form['type']
+        fecha = request.form['fechas']
+        acota = request.form['acotaciones']
+        hora = request.form['hora']
+        print(tipo)
+        print(fecha)
+        print(acota)
+        print(hora)
+        return "<h1>recibido</h1>"
+    else:
+        return render_template('test.html')
 
 @app.route('/protected')
 @login_required
