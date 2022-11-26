@@ -183,6 +183,7 @@ def homeuser():
     
 
     # -- Rutas de utilidades Vista usuario.
+
         # -- Gestionar Examenes
 @app.route('/labtest', methods=['GET', 'POST'])
 def labtest():
@@ -209,6 +210,8 @@ def labtest():
     else:
         examenes = ModelUser.consultexam(db, current_user.get_id())
         return render_template('labtest.html', exams = examenes)
+
+
     
     
     # -- Solicitar citas
@@ -225,7 +228,7 @@ def requestdate():
 @app.route('/addsolic', methods=['POST'])
 def addsolic():
     if request.method == 'POST':
-        ModelUser.newsolic(db, current_user.get_id(), request.form['tipo'], request.form['fecha'], request.form['acotaciones'], 2)
+        ModelUser.newsolic(db, current_user.get_id(), request.form['type'], request.form['fecha'], request.form['acotaciones'], 2)
         flash("Bien!    Solicitud de Cita añadida correctamente")
         return (redirect(url_for('requestdate')))
     else:
@@ -249,13 +252,20 @@ def editsolic(numsolic):
 @app.route('/update/<numsolic>', methods=['POST'])
 def update(numsolic):
     if request.method == 'POST':
-        ModelUser.updatesolic(db, request.form['tipo'], request.form['fecha'], request.form['acotaciones'], numsolic, current_user.get_id())
+        ModelUser.updatesolic(db, request.form['type'], request.form['fecha'], request.form['acotaciones'], numsolic, current_user.get_id())
         flash("Bien!    Solicitud de Cita actualizada correctamente.")
         return (redirect(url_for('requestdate')))
     else:
         return (redirect(url_for('requestdate')))
 
 
+
+
+
+    # -- Ver citas agendadas
+@app.route('/status')
+def status():
+    return render_template('status.html')
 
 
 #Vistas para Errores
