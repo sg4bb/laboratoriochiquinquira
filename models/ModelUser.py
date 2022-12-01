@@ -36,6 +36,32 @@ class ModelUser():
         except Exception as ex:
             raise Exception(ex)
 
+    #metodo para consultar el usuario que se registro
+    @classmethod
+    def consultidForPrivilege(self, db, username):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT iduser FROM user_data WHERE username = '{}'".format(username)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    #Metodo para registrar privilegios
+    @classmethod
+    def regprivilege(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "INSERT INTO user_privilege (iduser, privilege) VALUES ('{}', 3)".format(iduser)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
     #Metodo para UserMixin logeo.
     @classmethod  
     def get_by_id(self, db, iduser):
@@ -246,5 +272,22 @@ class ModelUser():
 
             cursor.execute(sql)
             cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+
+
+#Citas agendadas
+    #Consultar
+    @classmethod
+    def citasagendConsult(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT fecha, tipexam, status FROM citas_agend WHERE iduser = '{}' ORDER BY fecha DESC".format(iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
         except Exception as ex:
             raise Exception(ex)

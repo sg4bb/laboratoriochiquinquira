@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>navbar staff</title>
+
+    <!-- Boostrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/80e990db18.js" crossorigin="anonymous"></script>
+
+
+    <style>
+        .fa-bar {
+            width: 80%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+
+        .fa-title {
+            margin: 0 auto;
+        }
+
+        .fa-dropdown {
+            position: absolute;
+            width: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <nav class="navbar bg-light fixed-top">
+            <div class="container-fluid">
+                <!-- Logo del Brand -->
+                <a class="navbar-brand" href="/home">
+                    <img src="static/img/logotest6.png" alt="Logo" width="40" height="32"
+                        class="d-inline-block align-text-top">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                    aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h4 class="offcanvas-title fa-title" id="offcanvasNavbarLabel">Menú de opciones</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+
+                    <hr class="fa-bar">
+
+                    <div class="offcanvas-body">
+                        <ul class="nav nav-pills flex-column mb-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#"><i
+                                        class="fa-solid fa-house px-md-2"></i> Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="collapse" href="#collapseExample"
+                                    aria-expanded="false" aria-controls="collapseExample"><i
+                                        class="fa-solid fa-calendar-days px-md-2"></i> Cita</a>
+                                <div class="collapse" id="collapseExample">
+                                    <a class="dropdown-item text-primary" href="/"
+                                        style="padding-left:80px">Solicitudes</a>
+                                    <a class="dropdown-item text-primary" href="/"
+                                        style="padding-left:80px; margin-top: 9px;">Agendar</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="#"><i
+                                        class="fa-solid fa-flask px-md-2"></i> Exámenes</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="offcanvas-footer align-content-center">
+                        <di class="container" style="padding-top: 100%;">
+
+                            <hr class="fa-bar">
+
+                            <div class="flex-shrink-0 dropdown" style="padding-left: 40px; margin-top: 12px;">
+                                <!-- <a href="#"
+                                    class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+                                        class="rounded-circle">
+                                    <strong class="px-2">Gabriel Serra</strong>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-md-start text-small shadow"
+                                    style="position: relative;">
+                                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                                </ul> -->
+
+
+                                <a class="nav-link" data-bs-toggle="collapse" href="#collapseExamples"
+                                    aria-expanded="false" aria-controls="collapseExample">
+                                    <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+                                        class="rounded-circle">
+                                    <strong class="px-2">{{ current_user.fullname }}</strong>
+                                </a>
+                                <div class="collapse py-3" id="collapseExamples">
+                                    <div style="padding-left:12px">
+                                        <a class="dropdown-item px-4" href="#"">Configuración</a>
+                                        <a class="dropdown-item px-4" href="#">Perfil</a>
+                                    </div>
+                                    
+                                    
+                                    <hr class="dropdown-divider">
+                                    
+                                    <a class="dropdown-item" href="{{ url_for('logout') }}"><i class="fa-solid fa-door-open px-md-2"></i> Logout</a>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </nav>
+    </main>
+
+    <div class="container py-5">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Scripts Necesarios -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+        integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+
+    </script>
+</body>
+
+</html>

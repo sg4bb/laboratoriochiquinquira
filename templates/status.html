@@ -165,15 +165,30 @@
                 <td><center>Fecha</center></td>
                 <td><center>Tipo</center></td>
                 <td><center>Completada</center></td>
-            </tr>
+            </tr>    
         </thead>
 
         <tbody>
+            {% for citasagend in citas %}
             <tr>
-                <td>2022-10-01</td>
-                <td>Hematologia</td>
+                <td>{{ citasagend.0 }}</td>
+                {% if citasagend.1 == 1 %}
+                    <td>Hematologia</td>
+                {% endif %}
+
+                {% if citasagend.2 == 1 %}
+                <td><center></center></td>
+                {% endif %}
+
+                {% if citasagend.2 == 2 %}
                 <td><center><i class="fa-solid fa-circle-check"></i></center></td>
+                {% endif %}
+
+                {% if citasagend.2 == 3 %}
+                <td><center>Pospuesta</center></td>
+                {% endif %}
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 

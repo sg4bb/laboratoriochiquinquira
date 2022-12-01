@@ -138,6 +138,7 @@ def add_user():
                     profile_pic = cv2.imread('static/img/98681.jfif')
                     user = NewUser(0, username, password, fullname, email, address, genre, cellphone, profile_pic)
                     ModelUser.register(db, user)
+                    ModelUser.regprivilege(db, ModelUser.consultidForPrivilege(db, user.username)[0])
                     flash('Bien!    Se ha registrado correctamente.#2DE94F')
                     return redirect(url_for('login'))
                 else:
@@ -176,7 +177,7 @@ def homeuser():
         return render_template("home-user.html")
     elif userprivilege[1] == 2:
         #Renderizado de plantilla secretaria o Staff.
-        return 'Secretaria che'
+        return render_template("home-staff.html")
     else:
         #Renderizado de plantilla Admin.
         return 'Admin papa'
@@ -261,11 +262,21 @@ def update(numsolic):
 
 
 
-
     # -- Ver citas agendadas
 @app.route('/status')
 def status():
-    return render_template('status.html')
+    citasagend = ModelUser.citasagendConsult(db, current_user.get_id())
+    return render_template('status.html', citas = citasagend)
+
+
+
+
+
+
+
+
+
+
 
 
 #Vistas para Errores
@@ -278,21 +289,9 @@ def status_404(error):
     return "<h1>Pagina no encontrada.</h1>" , 404
 
 # -- Ruta para propositos de testeos.
-@app.route('/test', methods=['GET','POST'])
+@app.route('/test')
 def test():
-    if request.method == 'POST':
-
-        tipo = request.form['type']
-        fecha = request.form['fechas']
-        acota = request.form['acotaciones']
-        hora = request.form['hora']
-        print(tipo)
-        print(fecha)
-        print(acota)
-        print(hora)
-        return "<h1>recibido</h1>"
-    else:
-        return render_template('test.html')
+    return render_template('test.html')
 
 @app.route('/protected')
 @login_required
