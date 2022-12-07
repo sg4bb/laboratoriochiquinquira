@@ -211,9 +211,6 @@ def labtest():
     else:
         examenes = ModelUser.consultexam(db, current_user.get_id())
         return render_template('labtest.html', exams = examenes)
-
-
-    
     
     # -- Solicitar citas
 @app.route('/requestdate', methods=['GET', 'POST'])
@@ -259,9 +256,6 @@ def update(numsolic):
     else:
         return (redirect(url_for('requestdate')))
 
-
-
-
     # -- Ver citas agendadas
 @app.route('/status')
 def status():
@@ -269,6 +263,25 @@ def status():
     return render_template('status.html', citas = citasagend)
 
 
+
+# -- Rutas de utilidades Vista staff.
+
+    # -- Vista solicitudes
+@app.route('/gestsolic')
+def gestsolic():
+    solicitudes = ModelUser.consultsolicstaff(db)
+    return render_template('gestsolic.html', solic = solicitudes)
+
+        #Editar solicitudes
+@app.route('/gestsolic/edit', methods = ['GET','POST'])
+def gestsolicedit():
+    if request.method == 'POST':
+        valor = request.form['numero']
+        print(valor)
+        return "<h1>se mando algo</h1>"
+    else:
+        solicitudes = ModelUser.consultsolicstaff(db)
+        return render_template('gestsolic-modify.html', solic = solicitudes)
 
 
 
