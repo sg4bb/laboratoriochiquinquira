@@ -272,18 +272,28 @@ def gestsolic():
     solicitudes = ModelUser.consultsolicstaff(db)
     return render_template('gestsolic.html', solic = solicitudes)
 
-        #Editar solicitudes
+    # -- Editar
+        #Editar solicitudes (escoger e ingresar valores)
 @app.route('/gestsolic/edit', methods = ['GET','POST'])
 def gestsolicedit():
     if request.method == 'POST':
         valor = request.form['numero']
-        print(valor)
-        return "<h1>se mando algo</h1>"
+        citaEdit = ModelUser.consultsolicstaffus(db, valor)
+        usuarios = ModelUser.consultusersolic(db)
+        return render_template('gestsolic-edit.html', users = usuarios, citaparticular = citaEdit)
     else:
         solicitudes = ModelUser.consultsolicstaff(db)
         return render_template('gestsolic-modify.html', solic = solicitudes)
 
-
+        #Editar solicitudes (update)
+@app.route('/updatesolic/<numsolic>', methods = ['POST'])
+def updatesolic(numsolic):
+    if request.method == 'POST':
+        ModelUser.updatesolicStaff(db, request.form['tipoE'], request.form['fecha'], request.form['acotaciones'], numsolic, request.form['solicit'])
+        flash("Bien!    Solicitud de Cita actualizada correctamente.")
+        return (redirect(url_for('gestsolic')))
+    else:
+        return (redirect(url_for('gestsolic')))
 
 
 

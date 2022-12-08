@@ -259,7 +259,59 @@ class ModelUser():
             cursor = db.connection.cursor()
             sql = """SELECT `citas_solic`.`numsolic`, `user_data`.`fullname`, `citas_solic`.`fecha_solic`, `citas_solic`.`acotaci_solic`
                      FROM `citas_solic` 
-	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser`;"""
+	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` WHERE `citas_solic`.`statusnamesolic` = 2;"""
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    # Consultar para todas staff Con usuario
+    @classmethod
+    def consultsolicstaffus(self, db, numsolic):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `citas_solic`.`numsolic`, `user_data`.`fullname`, `citas_solic`.`fecha_solic`, `citas_solic`.`acotaci_solic`
+                     FROM `citas_solic` 
+	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` WHERE `citas_solic`.`statusnamesolic` = 2 AND `citas_solic`.`numsolic` = {};""".format(numsolic)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        # Updatear una solicitud de cita
+    @classmethod
+    def updatesolicStaff(self, db, tipo, fecha, acotacion, numsolic, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = """
+                UPDATE citas_solic
+                SET tipexam       = '{0}',
+                    fecha_solic   = '{1}',
+                    acotaci_solic = '{2}',
+                    iduser        = '{3}' 
+                WHERE   numsolic = '{4}'
+            """.format(tipo, fecha, acotacion, iduser, numsolic)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    # Consulta de usuarios solicitudes
+    @classmethod
+    def consultusersolic(self, db):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `user_data`.`fullname`, `user_data`.`iduser`
+                     FROM `user_data` 
+	                    LEFT JOIN `user_privilege` ON `user_data`.`iduser` = `user_privilege`.`iduser` WHERE `user_privilege`.`privilege` = 3;
+            """
 
             cursor.execute(sql)
             row = cursor.fetchall()
