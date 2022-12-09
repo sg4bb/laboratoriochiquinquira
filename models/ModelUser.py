@@ -304,6 +304,17 @@ class ModelUser():
             raise Exception(ex)
 
     @classmethod
+    def checksolic(self, db, numsolic):
+        try:
+            cursor = db.connection.cursor()
+            sql = "UPDATE citas_solic SET statusnamesolic = '3' WHERE numsolic = '{}'".format(numsolic)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @classmethod
     def delsolic(self, db, numsolic):
         cursor = db.connection.cursor()
         sql = "DELETE FROM citas_solic WHERE numsolic = '{0}'".format(numsolic)

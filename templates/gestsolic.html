@@ -219,7 +219,8 @@
                                 <td>Hematologia</td>
                                 <td>{{ solicitudes.3 }}</td>
                                 <td>
-                                    <center><span data-feather="check-circle" class="align-text-bottom"></span></center>
+                                    <a href="/checksolic/{{ solicitudes.0 }}">
+                                    <center><span data-feather="check-circle" class="align-text-bottom btn-delete"></span></center></a>
                                 </td>
                             </tr>
 
@@ -284,6 +285,8 @@
     </script>
 
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/delete.js') }}"></script>
 
 </body>
 

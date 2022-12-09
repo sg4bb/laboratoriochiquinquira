@@ -4,7 +4,7 @@ if(btnDelete) {
     const btnArray = Array.from(btnDelete);
     btnArray.forEach((btn) => {
         btn.addEventListener('click', (e) => {
-            if(!confirm('Estas seguro de eliminarlo?')) {
+            if(!confirm('Estas seguro de ejecutar la accion?')) {
                 e.preventDefault();
             }
         });

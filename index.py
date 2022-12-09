@@ -321,7 +321,9 @@ def gestsolicdel():
     # -- Checkear
 @app.route('/checksolic/<numsolic>')
 def checksolic(numsolic):
-    return numsolic
+    ModelUser.checksolic(db, numsolic)
+    flash("Bien!    Solicitud de Cita completada correctamente.")
+    return (redirect(url_for('gestsolic')))
 
 
 #Vistas para Errores
