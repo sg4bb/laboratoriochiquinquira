@@ -273,7 +273,7 @@ class ModelUser():
     def consultsolicstaffus(self, db, numsolic):
         try:
             cursor = db.connection.cursor()
-            sql = """SELECT `citas_solic`.`numsolic`, `user_data`.`fullname`, `citas_solic`.`fecha_solic`, `citas_solic`.`acotaci_solic`
+            sql = """SELECT `citas_solic`.`numsolic`, `user_data`.`fullname`, `citas_solic`.`fecha_solic`, `citas_solic`.`acotaci_solic`, `user_data`.`iduser`
                      FROM `citas_solic` 
 	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` WHERE `citas_solic`.`statusnamesolic` = 2 AND `citas_solic`.`numsolic` = {};""".format(numsolic)
 
@@ -298,6 +298,16 @@ class ModelUser():
                 WHERE   numsolic = '{4}'
             """.format(tipo, fecha, acotacion, iduser, numsolic)
 
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @classmethod
+    def delsolic(self, db, numsolic):
+        cursor = db.connection.cursor()
+        sql = "DELETE FROM citas_solic WHERE numsolic = '{0}'".format(numsolic)
+        try:
             cursor.execute(sql)
             cursor.connection.commit()
         except Exception as ex:

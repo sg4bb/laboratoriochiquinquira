@@ -266,7 +266,7 @@ def status():
 
 # -- Rutas de utilidades Vista staff.
 
-    # -- Vista solicitudes
+# -- Vista solicitudes
 @app.route('/gestsolic')
 def gestsolic():
     solicitudes = ModelUser.consultsolicstaff(db)
@@ -296,10 +296,32 @@ def updatesolic(numsolic):
         return (redirect(url_for('gestsolic')))
 
 
+    # -- Agregar
+@app.route('/gestsolic/add', methods = ['GET', 'POST'])
+def gestsolicadd():
+    if request.method == 'POST':
+        ModelUser.newsolic(db, request.form['solicit'], request.form['tipoE'], request.form['fecha'], request.form['acotaciones'], 2)
+        flash("Bien!    Solicitud de Cita añadida correctamente")
+        return (redirect(url_for('gestsolic')))
+    else:
+        usuarios = ModelUser.consultusersolic(db)
+        return render_template('gestsolic-add.html', users = usuarios)
 
+    # -- Borrar
+@app.route('/gestsolic/del', methods = ['GET', 'POST'])
+def gestsolicdel():
+    if request.method == 'POST':
+        ModelUser.delsolic(db, request.form['solicitud'])
+        flash("Bien!    Solicitud de Cita borrada correctamente.")
+        return (redirect(url_for('gestsolic')))
+    else:
+        solicitudes = ModelUser.consultsolicstaff(db)
+        return render_template('gestsolic-del.html', solic = solicitudes)
 
-
-
+    # -- Checkear
+@app.route('/checksolic/<numsolic>')
+def checksolic(numsolic):
+    return numsolic
 
 
 #Vistas para Errores

@@ -131,7 +131,7 @@
                 <div class="position-sticky pt-3 sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#">
+                            <a class="nav-link" aria-current="page" href="/home">
                                 <span data-feather="home" class="align-text-bottom"></span>
                                 Home
                             </a>
@@ -171,7 +171,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/gestsolic/del">
                                 <span data-feather="trash" class="align-text-bottom"></span>
                                 Borrar
                             </a>
@@ -198,7 +198,7 @@
                             <label for="solicitante" class="form-label">Solicitante</label>
                             <select class="form-select form-select-md mb-3" name="solicit" id="solicitante"
                                 aria-label=".form-select-lg example" required>
-                                <option selected>{{ citaparticular.1 }}</option>
+                                <option selected value="{{ citaparticular.4 }}">{{ citaparticular.1 }}</option>
                                 {% for usuarios in users %}
                                 <option value="{{ usuarios.1 }}">{{ usuarios.0 }}</option>
                                 {% endfor %}
@@ -212,7 +212,7 @@
                             <label for="tipo" class="form-label">Tipo</label>
                             <select class="form-select form-select-md mb-3" name="tipoE" id="tipo"
                                 aria-label=".form-select-lg example" required>
-                                <option selected>Hematología</option>
+                                <option selected value="1">Hematología</option>
                                 <option value="1">Hematología</option>
                             </select>
                             <div class="invalid-feedback">
