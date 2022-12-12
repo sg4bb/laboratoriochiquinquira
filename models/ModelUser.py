@@ -224,7 +224,6 @@ class ModelUser():
 # Solicitudes
     # Agregar
 
-
     @classmethod
     def newsolic(self, db, iduser, tipo, fecha, acotacion, status):
         try:
@@ -399,6 +398,56 @@ class ModelUser():
             cursor = db.connection.cursor()
             sql = "SELECT fecha, tipexam, status FROM citas_agend WHERE iduser = '{}' ORDER BY fecha DESC".format(
                 iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+
+
+
+# -- Examenes
+
+    #Usuario
+
+
+
+    #Staff
+
+
+
+        #1- Consultar todos los examenes
+    @classmethod
+    def consultexam_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`docexam`
+                     FROM `examenes` 
+	                    LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser`;
+            """
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+            #1.1 - Consultar citas
+    @classmethod
+    def consultcitas_staff(self, db, numsolic):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `citas_agend`.`fecha`, `user_data`.`fullname`, `citas_agend`.`numcita`, `citas_solic`.`acotaci_solic`
+                    FROM `citas_agend`
+	                    LEFT JOIN `citas_solic` ON `citas_agend`.`iduser` = `citas_solic`.`iduser`
+	                    LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser`
+                    WHERE `citas_solic`.`numsolic` = `citas_agend`.`numsolic` AND `citas_agend`.`numcita` = '{0}'
+            """.format(numsolic)
 
             cursor.execute(sql)
             row = cursor.fetchall()

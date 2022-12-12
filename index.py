@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
@@ -183,9 +183,9 @@ def homeuser():
         return 'Admin papa'
     
 
-    # -- Rutas de utilidades Vista usuario.
+# -- Rutas de utilidades Vista usuario.
 
-        # -- Gestionar Examenes
+    #1 -- Gestionar Examenes
 @app.route('/labtest', methods=['GET', 'POST'])
 def labtest():
     if request.method == 'POST':
@@ -212,7 +212,7 @@ def labtest():
         examenes = ModelUser.consultexam(db, current_user.get_id())
         return render_template('labtest.html', exams = examenes)
     
-    # -- Solicitar citas
+    # 2 -- Solicitar citas
 @app.route('/requestdate', methods=['GET', 'POST'])
 def requestdate():
     if request.method == 'POST':
@@ -256,7 +256,7 @@ def update(numsolic):
     else:
         return (redirect(url_for('requestdate')))
 
-    # -- Ver citas agendadas
+    #3 -- Ver citas agendadas
 @app.route('/status')
 def status():
     citasagend = ModelUser.citasagendConsult(db, current_user.get_id())
@@ -264,9 +264,11 @@ def status():
 
 
 
+
+
 # -- Rutas de utilidades Vista staff.
 
-# -- Vista solicitudes
+# 1 -- Vista solicitudes 
 @app.route('/gestsolic')
 def gestsolic():
     solicitudes = ModelUser.consultsolicstaff(db)
@@ -324,6 +326,26 @@ def checksolic(numsolic):
     ModelUser.checksolic(db, numsolic)
     flash("Bien!    Solicitud de Cita completada correctamente.")
     return (redirect(url_for('gestsolic')))
+
+
+# 2 -- Vista examenes
+@app.route('/gestexam')
+def gestexam():
+    examenes = ModelUser.consultexam_staff(db)
+    return render_template('gestexam.html', exams = examenes)
+
+    # Ruta para modal con carga automatica.
+@app.route('/modalexam', methods = ['POST', 'GET'])
+def modalexam():
+    if request.method == 'POST':
+        idcita = request.form['idcita']
+        citaV = ModelUser.consultcitas_staff(db, idcita)
+    return jsonify({'htmlresponse': render_template('gestexam-response.html', detcita = citaV)})
+
+
+
+
+
 
 
 #Vistas para Errores

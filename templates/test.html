@@ -1,119 +1,140 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/5.2/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/5.2/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/5.2/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
+    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon.ico">
+    <meta name="theme-color" content="#712cf9">
 
 
-    <title>Solicitar Cita</title>
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
 
-    <!-- Boostrap -->
-    <link href="	https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
 
-    <!-- flatpickr css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        .b-example-divider {
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
 
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="{{  url_for('static' , filename ='css/nose.css')  }}">
 </head>
 
-{% extends "layout-staff.html" %}
-
-<body class="bg-light">
+<body>
     {% block content %}
 
-    <br><br><br>
+    <br><br><br><br>
 
-    <div class="px-4 py-5 my-5 mx-0 text-center rounded-4">
-        <img class="d-block mx-auto mb-4" src="/static/img/logo750x750-3.png" alt="" width="72" height="57">
-        <h1 class="display-5 fw-bold text-white">Bienvenido {{ current_user.fullname }}</h1>
-        <div class="col-lg-6 mx-auto">
-            <!-- <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the
-                world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive
-                grid system, extensive prebuilt components, and powerful JavaScript plugins.</p> -->
-            <p class="lead mb-4 text-white">Esta es la pantalla para un usuario parte del Staff del laboratorio. Tienes
-                acceso
-                a distintas opciones dentro de el con las cuales podras modificar valores para el funcionamiento de
-                la misma, abajo dispones de cada una de ellas a modo de orientarte mejor.</p>
-        </div>
-    </div>
-    <div class="grid g-lg-5 py-5 row-cols-1 row-cols-lg-3 align-items-stretch">
-        <div class="g-col-6 g-col-md-4">
-            <div
-                class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                <svg class="bi" width="1em" height="1em">
-                    <use xlink:href="#collection" />
-                </svg>
-            </div>
-            <h3 class="fs-2">Gestionar exámenes</h3>
-            <!-- <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p> -->
-            <p>Gestiona exámenes de los pacientes, puedes agregar, editar y eliminar nuevo registro además de
-                consultar mediante el filtrado de paciente.</p>
+    <a data-bs-toggle="mensaje" title="Cal. 10" class="btn btn-success" href="#">Curso B</a>
 
-            <a href="#" class="icon-link d-inline-flex align-items-center">
-                Acceder ya
-                <svg class="bi" width="1em" height="1em">
-                    <use xlink:href="#chevron-right" />
-                </svg>
-            </a>
-        </div>
-        <div class="g-col-6 g-col-md-4">
-            <div class="col shadow-lg rounded-3 px-4 py-4 fa-midcolum">
-                <div
-                    class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                    <svg class="bi" width="1em" height="1em">
-                        <use xlink:href="#calendar3" />
-                    </svg>
-                </div>
-                <h3 class="fs-2">Agendar</h3>
-                <p>Agenda citas de los pacientes que solicitaron una cita, en el menú interactivo podrás ver
-                    todas las solicitudes y de acuerdo a eso ver la disponibilidad.</p>
-                <a href="#" class="icon-link d-inline-flex align-items-center">
-                    Acceder ya
-                    <svg class="bi" width="1em" height="1em">
-                        <use xlink:href="#chevron-right" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-        <div class="g-col-6 g-col-md-4">
-            <div class="col shadow-lg rounded-3 px-4 py-4">
-                <div
-                    class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                    <svg class="bi" width="1em" height="1em">
-                        <use xlink:href="#chat-quote-fill" />
-                    </svg>
-                </div>
-                <h3 class="fs-2">Solicitudes</h3>
-                <p>Visualiza las solicitudes hechas por los usuarios y el estado de cada una, con ellas podrás
-                    descartarlas o programarlas para que el laboratorio las haga.
-                </p>
-                <a href="#" class="icon-link d-inline-flex align-items-center">
-                    Acceder ya
-                    <svg class="bi" width="1em" height="1em">
-                        <use xlink:href="#chevron-right" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </div>
+    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="right"
+        data-bs-title="Tooltip on right">
+        Tooltip on right
+    </button>
 
     {% endblock %}
 
-    <!-- bootstrap -->
+    <!-- Script JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+
     <script src="/docs/5.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 
-    <!-- flatpickr -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+
+    <!-- Scripts para notificaciones -->
     <script>
-        flatpickr("#Date", {});
-    </script>
-</body>
+        // var tooltipTriggerList = [].slice.call.(document.querySelectorAll('[data-bs-toggle="mensaje"]'))
+        // var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        //     return new bootstrap.Tooltip(tooltipTriggerEl)
+        // })
 
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+
+</body>
 
 </html>
