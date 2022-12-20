@@ -79,7 +79,7 @@
     {% if messages %}
     {% for message in messages %}
     <div id="toast1" class="toast text-bg-dark" role="alert" aria-live="assertive" aria-atomic="true" data-delay="500"
-        style="position: absolute; top: 62px; right: 10px;">
+        style="position: absolute; top: 119px; right: 10px;">
         <div class="toast-header">
             <div class="rounded me-3"><i class="fa-sharp fa-solid fa-bell"></i></div>
             <strong class="me-auto">{{message[0:7]}}</strong>
@@ -158,7 +158,7 @@
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="/gestexam/edit">
+                            <a class="nav-link active" href="/gestexam/edit">
                                 <span data-feather="edit" class="align-text-bottom"></span>
                                 Editar
                             </a>
@@ -188,7 +188,7 @@
                 </div>
                 <div class="collapse" id="collapseExample">
                     <div class="card">
-                        <form action="/gestexam" method="POST">
+                        <form action="/gestexam/edit" method="POST">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                             <div class="card card-body py-sm-0">
@@ -266,67 +266,79 @@
                     </div>
                 </div>
 
-                <div class="table-responsive py-1">
-                    <table class="table table-striped text-center table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Fecha</th>
-                                <th scope="col">Tipo</th>
-                                <th scope="col">Cita
-                                    <span type="" class="" data-bs-toggle="tooltip" data-bs-placement="right"
-                                        data-bs-title="Puedes dar click en la cita para ver sus detalles"
-                                        style="position:relative;">
-                                        <span data-feather="help-circle" class="align-text-bottom"></span>
-                                    </span>
-                                </th>
-                                <th scope="col">Usuario</th>
-                                <th scope="col">GR</th>
-                                <th scope="col">GB</th>
-                                <th scope="col">Emoglobina</th>
-                                <th scope="col">Hematocrito</th>
-                                <th scope="col">Plaquetas</th>
-                                <th scope="col">VCM</th>
-                                <th scope="col">HCM</th>
-                                <th scope="col">CHCM</th>
-                                <th scope="col">Documento PDF</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for examenes in exams %}
-                            <tr>
-                                <td>{{ examenes.0 }}</td>
-                                <td>{{ examenes.1 }}</td>
+                <form class="form-check" action="/gestexam/edit/t" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                                {% if examenes.2 == 1 %}
-                                <td>Hematología</td>
-                                {% endif %}
-                                <!-- Hipervinculo hacia el detalle de la cita -->
-                                <td>
-                                    <p type="button" data-id='{{ examenes.3 }}' class="valueCit" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
-                                        {{ examenes.3 }}
-                                    </p>
-                                </td>
+                    <div class="table-responsive py-1">
+                        <table class="table table-striped text-center table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Cita
+                                        <span type="" class="" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            data-bs-title="Puedes dar click en la cita para ver sus detalles"
+                                            style="position:relative;">
+                                            <span data-feather="help-circle" class="align-text-bottom"></span>
+                                        </span>
+                                    </th>
+                                    <th scope="col">Usuario</th>
+                                    <th scope="col">GR</th>
+                                    <th scope="col">GB</th>
+                                    <th scope="col">Emoglobina</th>
+                                    <th scope="col">Hematocrito</th>
+                                    <th scope="col">Plaquetas</th>
+                                    <th scope="col">VCM</th>
+                                    <th scope="col">HCM</th>
+                                    <th scope="col">CHCM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for examenes in exams %}
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input id="numedit" name="numEdit" type="radio" class="form-check-input"
+                                                value="{{ examenes.0 }}">
+                                        </div>
+                                    </td>
+                                    <td>{{ examenes.0 }}</td>
+                                    <td>{{ examenes.1 }}</td>
 
-                                <td>{{ examenes.4 }}</td>
-                                <td>{{ examenes.5 }}</td>
-                                <td>{{ examenes.6 }}</td>
-                                <td>{{ examenes.7 }}</td>
-                                <td>{{ examenes.8 }}</td>
-                                <td>{{ examenes.9 }}</td>
-                                <td>{{ examenes.10 }}</td>
-                                <td>{{ examenes.11 }}</td>
-                                <td>{{ examenes.12 }}</td>
-                                <form action="/download/{{ examenes.13 }}" method="POST">
-                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                    <td>{{ form.download() }}</td>
-                                </form>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                                    {% if examenes.2 == 1 %}
+                                    <td>Hematología</td>
+                                    {% endif %}
+                                    <!-- Hipervinculo hacia el detalle de la cita -->
+                                    <td>
+                                        <p type="button" data-id='{{ examenes.3 }}' class="valueCit"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            {{ examenes.3 }}
+                                        </p>
+                                    </td>
+
+                                    <td>{{ examenes.4 }}</td>
+                                    <td>{{ examenes.5 }}</td>
+                                    <td>{{ examenes.6 }}</td>
+                                    <td>{{ examenes.7 }}</td>
+                                    <td>{{ examenes.8 }}</td>
+                                    <td>{{ examenes.9 }}</td>
+                                    <td>{{ examenes.10 }}</td>
+                                    <td>{{ examenes.11 }}</td>
+                                    <td>{{ examenes.12 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <br>
+                    <div class="input-group">
+                        <button type="submit" class="btn btn-dark shadow"><span data-feather="log-in"
+                                class="align-text-bottom"></span> Ingresar</button>
+                    </div><small><cite> al dar al boton 'Ingresar' serás llevado a una ventana para editar la solicitud de cita seleccionada.</cite></small>
+                </form>
             </main>
         </div>
     </div>

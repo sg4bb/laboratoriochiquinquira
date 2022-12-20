@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
@@ -8,8 +8,14 @@ from config import config
 # Herramienta para Imagenes y Comprobaciones.
 import cv2
 
+# Herramienta pa subir archivos.
+from wtforms import FileField, SubmitField
+from flask_wtf import FlaskForm
+from werkzeug.utils import secure_filename
+from io import BytesIO
+
 #Herramienta para convertir Dates a String
-import datetime
+from datetime import datetime
 
 #Herramienta para convertir tuplas
 from functools import reduce
@@ -162,7 +168,7 @@ def register():
 
 
 
-# -- Rutas a partir del login (FAVOR PROTEGER RUTAS UNA VEZ FINALIZADO SU DISEÑO)
+# -- Rutas a partir del login (PROTEGER RUTAS UNA VEZ FINALIZADO SU DISEÑO)
 
     # -- Usuario
         # --Home 
@@ -181,9 +187,6 @@ def homeuser():
     else:
         #Renderizado de plantilla Admin.
         return 'Admin papa'
-    
-
-# -- Rutas de utilidades Vista usuario.
 
     #1 -- Gestionar Examenes
 @app.route('/labtest', methods=['GET', 'POST'])
@@ -329,10 +332,69 @@ def checksolic(numsolic):
 
 
 # 2 -- Vista examenes
-@app.route('/gestexam')
+
+
+    # Funcion para guardar file y descargar
+class UploadFileForm(FlaskForm):
+    file = FileField("file")
+    submit = SubmitField("Continuar")
+    download = SubmitField("Descargar")
+
+
+# Consulta de examenes [post filtrado , Get sin filtrar]
+@app.route('/gestexam', methods = ['POST', 'GET'])
 def gestexam():
-    examenes = ModelUser.consultexam_staff(db)
-    return render_template('gestexam.html', exams = examenes)
+    form = UploadFileForm()
+    if request.method == 'POST':
+        usuario = request.form['user']
+        fecmin  = request.form['fecMin']
+        fecmax  = request.form['fecMax']
+
+        if len(usuario) == 0:
+            usuario = None
+
+        if len(fecmin) == 0:
+            fecmin  = None
+
+        if len(fecmax) == 0:
+            fecmax  = None
+
+        if usuario != None:
+            if fecmin is None and fecmax is None:
+                examenes = ModelUser.consultcituser_staff(db, usuario)
+                usuarios = ModelUser.consultusers_staff(db)
+                return render_template('gestexam.html', exams = examenes, users = usuarios, form = form)
+
+            examenes = ModelUser.consultcitfecU_staff(db, usuario, fecmin, fecmax)
+            usuarios = ModelUser.consultusers_staff(db)
+            return render_template('gestexam.html', exams = examenes, users = usuarios, form = form)
+        else:
+            if fecmin is None and fecmax is None:
+                return (redirect(url_for('gestexam')))
+            else:
+                examenes = ModelUser.consultcitfec_staff(db, fecmin, fecmax)
+                print(examenes)
+                usuarios = ModelUser.consultusers_staff(db)
+                return render_template('gestexam.html', exams = examenes, users = usuarios, form = form)
+    else:
+        examenes = ModelUser.consultexam_staff(db)
+        usuarios = ModelUser.consultusers_staff(db)
+        return render_template('gestexam.html', exams = examenes, users = usuarios, form = form)
+
+    # Ruta para descarga de archivos
+@app.route('/download/<numdoc>', methods = ['POST', 'GET'])
+def download(numdoc):
+
+    form = UploadFileForm()
+
+    if request.method == 'POST':
+        doc_file = ModelUser.consultdocs_staff(db, numdoc)
+        return send_file(BytesIO(doc_file[1]), mimetype="text/pdf", download_name='{}.pdf'.format(doc_file[0]), as_attachment=True)
+        # return "m uchachoooo no volvimo a ilsuionar"
+    else:
+        examenes = ModelUser.consultexam_staff(db)
+        usuarios = ModelUser.consultusers_staff(db)
+        return render_template('gestexam.html', exams = examenes, users = usuarios, form = form)
 
     # Ruta para modal con carga automatica.
 @app.route('/modalexam', methods = ['POST', 'GET'])
@@ -344,6 +406,209 @@ def modalexam():
 
 
 
+
+    # Agregar
+@app.route('/gestexam/add', methods = ['POST' , 'GET'])
+def gestexamadd():
+    form = UploadFileForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+
+            #recibir datos referentes a la data del examen
+            cita  = request.form['cita']
+            tipo  = request.form['tipoE']
+            fecha = request.form['fecha']
+
+            #recibir datos del paciente
+            pac = request.form['paciente']
+            fullnamepac = pac[ pac.find(",")+1 : ]
+            idpac = pac[ : pac.find(",") ]
+
+            #recibir el documento y cambiar el nombre
+            file_name = form.file.data
+            file_name.filename = 'Examen_{0}_{1}'.format(secure_filename(fullnamepac), fecha)
+            
+            #recibir datos de los valores el examen
+            gr = request.form['gr']
+            gb = request.form['gb']
+            emoglobina = request.form['emoglobina']
+            hematocritos = request.form['hematocritos']
+            plaquetas = request.form['plaquetas']
+            vcm = request.form['vcm']
+            hcm = request.form['hcm']
+            chcm = request.form['chcm']
+
+            ModelUser.adddocexam_staff(db, file_name.filename, file_name.read())
+            doc_id = ModelUser.consultdocexam_staff(db, file_name.filename)
+            ModelUser.addexam_staff(db, idpac, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, doc_id)
+
+            flash("Bien!    Examen agregado correctamente.")
+            return (redirect(url_for('gestexam')))
+
+            # return "muchacho argentina Campeooooon"
+    else:
+        usuarios = ModelUser.consultpacexam_staff(db)
+        citas = ModelUser.consultcitexam_staff(db)
+        return render_template('gestexam-add.html', users = usuarios, cits = citas, form=form)
+
+
+
+    # Borrar
+@app.route('/gestexam/del' , methods = ['GET' , 'POST'])
+def gestexamdel():
+    form = UploadFileForm()
+    if request.method == 'POST':
+        usuario = request.form['user']
+        fecmin  = request.form['fecMin']
+        fecmax  = request.form['fecMax']
+
+        if len(usuario) == 0:
+            usuario = None
+
+        if len(fecmin) == 0:
+            fecmin  = None
+
+        if len(fecmax) == 0:
+            fecmax  = None
+
+        if usuario != None:
+            if fecmin is None and fecmax is None:
+                examenes = ModelUser.consultcituser_staff(db, usuario)
+                usuarios = ModelUser.consultusers_staff(db)
+                return render_template('gestexam-del.html', exams = examenes, users = usuarios, form = form)
+
+            examenes = ModelUser.consultcitfecU_staff(db, usuario, fecmin, fecmax)
+            usuarios = ModelUser.consultusers_staff(db)
+            return render_template('gestexam-del.html', exams = examenes, users = usuarios, form = form)
+        else:
+            if fecmin is None and fecmax is None:
+                return (redirect(url_for('gestexamdel')))
+            else:
+                examenes = ModelUser.consultcitfec_staff(db, fecmin, fecmax)
+                usuarios = ModelUser.consultusers_staff(db)
+                return render_template('gestexam-del.html', exams = examenes, users = usuarios, form = form)
+    else:
+        examenes = ModelUser.consultexam_staff(db)
+        usuarios = ModelUser.consultusers_staff(db)
+        return render_template('gestexam-del.html', exams = examenes, users = usuarios, form = form)
+
+@app.route('/delexam' , methods = ['GET', 'POST'])
+def delexam():
+    if request.method == 'POST':
+        numexam = request.form['numDel']
+        ModelUser.delexam_staff(db, numexam)
+        flash("Bien!    Examen borrado correctamente.")
+        return (redirect(url_for('gestexam')))
+    else:
+        return (redirect(url_for('gestexam')))
+
+
+    
+    #Editar
+@app.route('/gestexam/edit', methods = ['GET' , 'POST'])
+def gestexamedit():
+    form = UploadFileForm()
+    if request.method == 'POST':
+        usuario = request.form['user']
+        fecmin  = request.form['fecMin']
+        fecmax  = request.form['fecMax']
+
+        if len(usuario) == 0:
+            usuario = None
+
+        if len(fecmin) == 0:
+            fecmin  = None
+
+        if len(fecmax) == 0:
+            fecmax  = None
+
+        if usuario != None:
+            if fecmin is None and fecmax is None:
+                examenes = ModelUser.consultcituser_staff(db, usuario)
+                usuarios = ModelUser.consultusers_staff(db)
+                return render_template('gestexam-modify.html', exams = examenes, users = usuarios, form = form)
+
+            examenes = ModelUser.consultcitfecU_staff(db, usuario, fecmin, fecmax)
+            usuarios = ModelUser.consultusers_staff(db)
+            return render_template('gestexam-modify.html', exams = examenes, users = usuarios, form = form)
+        else:
+            if fecmin is None and fecmax is None:
+                return (redirect(url_for('gestexamedit')))
+            else:
+                examenes = ModelUser.consultcitfec_staff(db, fecmin, fecmax)
+                usuarios = ModelUser.consultusers_staff(db)
+                return render_template('gestexam-modify.html', exams = examenes, users = usuarios, form = form)
+    else:
+        examenes = ModelUser.consultexam_staff(db)
+        usuarios = ModelUser.consultusers_staff(db)
+        return render_template('gestexam-modify.html', exams = examenes, users = usuarios, form = form)
+
+@app.route('/gestexam/edit/t', methods = ['POST' , 'GET'])
+def updtexam():
+    form = UploadFileForm()
+    if request.method == 'POST':
+        numexam = request.form['numEdit']
+        citEdit = ModelUser.consultexamedit_staff(db, numexam)
+        usuarios = ModelUser.consultpacexam_staff(db)
+        citas = ModelUser.consultcitcomp_staff(db)
+        return render_template('gestexam-edit.html', cits = citas, users = usuarios, citEdit = citEdit, form = form)
+    else:
+        return redirect(url_for('gestexam'))
+
+
+@app.route('/edtexam/<numexam>', methods = ['POST' , 'GET'])
+def edtexam(numexam):
+    form = UploadFileForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            #recibir datos referentes a la data del examen
+            cita  = request.form['cita']
+            tipo  = request.form['tipoE']
+            fecha = request.form['fecha']
+
+            #recibir datos del paciente
+            pac = request.form['paciente']
+            fullnamepac = pac[ pac.find(",")+1 : ]
+            idpac = pac[ : pac.find(",") ]
+
+            #recibir el documento y cambiar el nombre
+            file_name = form.file.data
+            file_name.filename = 'Examen_{0}_{1}'.format(secure_filename(fullnamepac), fecha)
+            
+            #recibir datos de los valores el examen
+            gr = request.form['gr']
+            gb = request.form['gb']
+            emoglobina = request.form['emoglobina']
+            hematocritos = request.form['hematocritos']
+            plaquetas = request.form['plaquetas']
+            vcm = request.form['vcm']
+            hcm = request.form['hcm']
+            chcm = request.form['chcm']
+
+            if len(file_name.read()) == 0:
+                ModelUser.updtexam_doc_staff(db, )
+                doc_id = ModelUser.consultdocexam_staff(db, file_name.filename, file_name.read())
+                ModelUser.updtexam_valores_staff(db, numexam, idpac, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, doc_id)
+            else:
+                doc_id = None
+                ModelUser.updtexam_valores_staff(db, numexam, idpac, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, doc_id)
+            
+            flash("Bien!    Examen actualizado correctamente.")
+            return (redirect(url_for('gestexam')))
+    else:
+        return redirect(url_for('gestexam'))
+
+
+
+# 3 -- Vista Citas
+
+    # Consulta
+@app.route('/gestcit', methods = ['POST' , 'GET'])
+def gestcit():
+    if request.method == 'POST':
+        return "vista post"
+    else:
+        return "vista get"
 
 
 
@@ -357,10 +622,23 @@ def status_401(error):
 def status_404(error):
     return "<h1>Pagina no encontrada.</h1>" , 404
 
+
+
+
 # -- Ruta para propositos de testeos.
-@app.route('/test')
+@app.route('/test', methods = ['GET' , 'POST'])
 def test():
-    return render_template('test.html')
+    form = UploadFileForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            file_data = form.file.data
+            file_data.filename = 'Examen{0}_{1}_{2}'.format('1', secure_filename('Maribel Rondon'), '2022-12-04')
+
+            ModelUser.updtexam_doc_staff(db, '1', file_data.filename, file_data.read())
+            flash("Bien!    Examen actualizado correctamente.")
+            return redirect(url_for('test'))
+    else:
+        return render_template('test.html', form = form)
 
 @app.route('/protected')
 @login_required

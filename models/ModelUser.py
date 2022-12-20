@@ -1,5 +1,7 @@
 from .entities.User import User
 import string
+from datetime import datetime
+import string
 
 
 class ModelUser():
@@ -416,16 +418,16 @@ class ModelUser():
 
 
 
-    #Staff
+    #Staff y administrador
 
 
 
-        #1- Consultar todos los examenes
+        #1- Vista Consulta todos los examenes
     @classmethod
     def consultexam_staff(self, db):
         try:
             cursor = db.connection.cursor()
-            sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`docexam`
+            sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.doc
                      FROM `examenes` 
 	                    LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser`;
             """
@@ -453,5 +455,325 @@ class ModelUser():
             row = cursor.fetchall()
 
             return row
+        except Exception as ex:
+            raise Exception(ex)
+
+            #1.2 - Consultar documentos para descarga.
+    @classmethod
+    def consultdocs_staff(self, db, numdoc):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT name_doc, file_doc FROM doc_examenes WHERE id_doc = '{}';".format(numdoc)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+
+            #1.3 - Filtrado
+    #1.3.1 - Consultar usuarios 
+    @classmethod
+    def consultusers_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `user_data`.`iduser` , `user_data`.`fullname` 
+                      FROM `user_data` 
+	                    LEFT JOIN `user_privilege` ON `user_privilege`.`iduser` = `user_data`.`iduser` WHERE `user_privilege`.`privilege` = '3';"""
+            
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    #1.3.2 - Consulta particular de las peticiones
+
+        #a. Consulta de citas del usuario ()
+    @classmethod
+    def consultcituser_staff(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                     FROM `examenes` 
+	                    LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser` WHERE `user_data`.`iduser` = '{}';""".format(iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+        #b. Consulta de citas fechas entre ambas Fec MaxMin
+    @classmethod
+    def consultcitfec_staff(self, db, fecmin, fecmax):
+        try:
+            cursor = db.connection.cursor()
+
+            if (fecmin and fecmax) != None:
+                if (datetime.strptime(fecmin,'%Y-%m-%d')) > (datetime.strptime(fecmax,'%Y-%m-%d')):
+                    aux = fecmax
+                    fecmax = fecmin
+                    fecmin = aux
+
+                sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                         FROM `examenes` 
+                            LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser` WHERE `examenes`.`fecexam` BETWEEN '{0}' AND '{1}';""".format(fecmin, fecmax)
+            else:
+                if fecmin is None:
+                    sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                            FROM `examenes` 
+                                LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser` WHERE `examenes`.`fecexam` < '{}';""".format(fecmax)
+                else:
+                    sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                             FROM `examenes` 
+                                LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser` WHERE `examenes`.`fecexam` > '{}';""".format(fecmin)
+                
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+        
+        #c. Consulta de citas fechas con usuario
+    @classmethod
+    def consultcitfecU_staff(self, db, iduser, fecmin, fecmax):
+        try:
+            cursor = db.connection.cursor()
+
+            if fecmin and fecmax != None:
+                if (datetime.strptime(fecmin,'%Y-%m-%d')) > (datetime.strptime(fecmax,'%Y-%m-%d')):
+                    aux = fecmax
+                    fecmax = fecmin
+                    fecmin = aux
+
+                sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                         FROM `examenes` 
+	                        LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser` WHERE `examenes`.`iduser` = '{0}' AND `examenes`.`fecexam` BETWEEN '{1}' AND '{2}';""".format(iduser, fecmin, fecmax)
+            else:
+                if fecmin is None:
+                    sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                            FROM `examenes` 
+                                LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser` WHERE `examenes`.`iduser` = '{0}' AND `examenes`.`fecexam` < '{1}';""".format(iduser, fecmax)
+                else:
+                    sql = """SELECT `examenes`.`numexam`, `examenes`.`fecexam`, `examenes`.`tipexam`, `examenes`.`numcita`, `user_data`.`fullname`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                            FROM `examenes` 
+                                LEFT JOIN `user_data` ON `user_data`.`iduser` = `examenes`.`iduser` WHERE `examenes`.`iduser` = '{0}' AND `examenes`.`fecexam` > '{1}';""".format(iduser, fecmin)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+
+
+
+        #2 Insertar examenes 
+    # Insertar documento
+    @classmethod
+    def adddocexam_staff(self, db, namenewdoc, datanewdoc):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "INSERT INTO doc_examenes (name_doc, file_doc) VALUES (%s, %s)"
+
+            cursor.execute(sql, (namenewdoc, datanewdoc))
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    # insertar valores
+    @classmethod
+    def addexam_staff(self, db, paciente, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, id_doc):
+        try:
+            cursor = db.connection.cursor()
+            
+
+            sql1 = "INSERT INTO `examenes` (`iduser`, `tipexam`, `numcita`, `fecexam`, `globulos_rojos`, `globulos_blancos`, `emoglobina`, `hematocrito`, `plaquetas`, `vcm`, `hcm`, `chcm`, `doc`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"   
+           
+
+            cursor.execute(sql1, (paciente, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, id_doc))
+            cursor.connection.commit()
+
+            sql2 = "UPDATE citas_agend SET status = '2' WHERE numcita = '{}'".format(cita)
+
+            cursor.execute(sql2)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    # # actualizar status cita
+    # @classmethod
+    # def updtstatuscit_staff(self, db, numcit):
+    #     try:
+    #         cursor = db.connection.cursor()
+
+    #         sql = "UPDATE citas_agend SET status = '2' WHERE numcita = '{}'".format(numcit)
+
+    #         cursor.execute(sql)
+    #         cursor.connection.commit()
+    #     except Exception as ex:
+    #         raise Exception(ex)
+
+    #2.1 Sub-Bloque consultas
+    
+        # a. Pacientes
+    @classmethod
+    def consultpacexam_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `user_data`.`iduser` , `user_data`.`fullname` 
+                     FROM `user_data`
+	                    LEFT JOIN `citas_agend` ON `user_data`.`iduser` = `citas_agend`.`iduser` WHERE `citas_agend`.`status` = '1'; """
+            
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+        # b. Citas
+    @classmethod
+    def consultcitexam_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha` , `user_data`.`fullname`
+                     FROM `user_data`
+	                    LEFT JOIN `citas_agend` ON `user_data`.`iduser` = `citas_agend`.`iduser` WHERE `citas_agend`.`status` = '1'; """
+            
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        # c. Documento 
+    @classmethod
+    def consultdocexam_staff(self, db, namedoc):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "SELECT id_doc FROM doc_examenes WHERE name_doc = '{}'".format(namedoc)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+        #3 - Borrar examen
+    @classmethod
+    def delexam_staff(self, db, numexam):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "DELETE FROM examenes WHERE numexam = '{}'".format(numexam)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    
+        #4 Editar
+
+    # a. consulta de examen a editar
+    @classmethod
+    def consultexamedit_staff(self, db, numexam):
+        try:
+            cursor = db.connection.cursor()
+
+            # sql = """SELECT `examenes`.`numexam`, `examenes`.`iduser`, `user_data`.`fullname`, `examenes`.`numcita`, `citas_agend`.`fecha`,`examenes`.`tipexam`, `examenes`.`fecexam`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+            #          FROM `user_data`
+	        #             LEFT JOIN `examenes` ON `user_data`.`iduser` = `examenes`.`iduser` 
+            #             LEFT JOIN `citas_agend` ON `user_data`.`iduser` = `citas_agend`.`iduser`
+    	    #                 WHERE `examenes`.`numexam` = '{}' AND `citas_agend`.`status` = '1'""".format(numexam)
+
+            sql = """SELECT `examenes`.`numexam`, `examenes`.`iduser`, `user_data`.`fullname`, `examenes`.`numcita`, `citas_agend`.`fecha`,`examenes`.`tipexam`, `examenes`.`fecexam`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
+                     FROM `examenes`
+	                    LEFT JOIN `user_data` ON `examenes`.`iduser` = `user_data`.`iduser`
+                        LEFT JOIN `citas_agend` ON `examenes`.`numcita` = `citas_agend`.`numcita`
+                            WHERE `examenes`.`numexam` = '{}'""".format(numexam)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    # consultar citas con status ya realizadas
+    @classmethod
+    def consultcitcomp_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha` , `user_data`.`fullname`
+                     FROM `user_data`
+	                    LEFT JOIN `citas_agend` ON `user_data`.`iduser` = `citas_agend`.`iduser` WHERE `citas_agend`.`status` = '2' ORDER BY `citas_agend`.`fecha` DESC;"""
+            
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    # actualizar registro
+
+        #a. sin documento
+    @classmethod
+    def updtexam_valores_staff(self, db, numexam, paciente, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, doc):
+        try:
+            cursor = db.connection.cursor()
+
+            if doc is None:
+                sql = """UPDATE examenes SET iduser = '{0}', tipexam = '{1}', numcita = '{2}', fecexam = '{3}', globulos_rojos = '{4}', globulos_blancos = '{5}',
+                emoglobina = '{6}', hematocrito = '{7}', plaquetas = '{8}', vcm = '{9}', hcm = '{10}', chcm = '{11}'
+                WHERE numexam = '{12}'""".format(paciente, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, numexam)
+            else:
+                sql = """UPDATE examenes SET iduser = '{0}', tipexam = '{1}', numcita = '{2}', fecexam = '{3}', globulos_rojos = '{4}', globulos_blancos = '{5}',
+                emoglobina = '{6}', hematocrito = '{7}', plaquetas = '{8}', vcm = '{9}', hcm = '{10}', chcm = '{11}', doc = '{12}'
+                WHERE numexam = '{13}'""".format(paciente, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, doc, numexam)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+
+
+        #b. actualizar documento -por ahora en pruebas-
+    @classmethod
+    def updtexam_doc_staff(self, db, numdoc, namenewdoc, datanewdoc):
+        try:
+            cursor = db.connection.cursor()
+
+            sql1 = "INSERT INTO doc_examenes (name_doc, file_doc) VALUES (%s, %s)"
+            sql2 = "DELETE FROM doc_examenes WHERE id_doc = '{}'".format(numdoc)
+
+
+            cursor.execute(sql1, (namenewdoc, datanewdoc))
+            cursor.connection.commit()
+
+            cursor.execute(sql2)
+            cursor.connection.commit()
         except Exception as ex:
             raise Exception(ex)
