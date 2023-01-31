@@ -159,7 +159,7 @@ class ModelUser():
     def consultexam(self, db, iduser):
         try:
             cursor = db.connection.cursor()
-            sql = "SELECT fecexam, tipexam, globulos_rojos, globulos_blancos, emoglobina, hematocrito, plaquetas, vcm, hcm, chcm, docexam FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(
+            sql = "SELECT fecexam, tipexam, globulos_rojos, globulos_blancos, emoglobina, hematocrito, plaquetas, vcm, hcm, chcm, doc FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(
                 iduser)
 
             cursor.execute(sql)
@@ -176,7 +176,6 @@ class ModelUser():
 
             # si toca '1' desea filtrar Globulos Rojos.
             if valor == '1':
-                print('llegue hasta aqui')
                 sql = "SELECT fecexam, globulos_rojos FROM examenes WHERE iduser = '{}' ORDER BY fecexam ASC".format(
                     iduser)
 
@@ -408,6 +407,22 @@ class ModelUser():
         except Exception as ex:
             raise Exception(ex)
 
+    
+    #   Examenes para card
+    @classmethod 
+    def examlastpac(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "SELECT fecexam, globulos_rojos , globulos_blancos, emoglobina , hematocrito, plaquetas, vcm, hcm, chcm FROM examenes WHERE iduser = '{}' ORDER BY numexam DESC".format(iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
 
 
 
@@ -517,7 +532,7 @@ class ModelUser():
             cursor = db.connection.cursor()
 
             if (fecmin and fecmax) != None:
-                if (datetime.strptime(fecmin,'%Y-%m-%d')) > (datetime.strptime(fecmax,'%Y-%m-%d')):
+                if (datetime.strptime(fecmin,'%Y/%m/%d')) > (datetime.strptime(fecmax,'%Y/%m/%d')):
                     aux = fecmax
                     fecmax = fecmin
                     fecmin = aux
@@ -549,7 +564,7 @@ class ModelUser():
             cursor = db.connection.cursor()
 
             if fecmin and fecmax != None:
-                if (datetime.strptime(fecmin,'%Y-%m-%d')) > (datetime.strptime(fecmax,'%Y-%m-%d')):
+                if (datetime.strptime(fecmin,'%Y/%m/%d')) > (datetime.strptime(fecmax,'%Y/%m/%d')):
                     aux = fecmax
                     fecmax = fecmin
                     fecmin = aux
@@ -612,19 +627,6 @@ class ModelUser():
         except Exception as ex:
             raise Exception(ex)
 
-    # # actualizar status cita
-    # @classmethod
-    # def updtstatuscit_staff(self, db, numcit):
-    #     try:
-    #         cursor = db.connection.cursor()
-
-    #         sql = "UPDATE citas_agend SET status = '2' WHERE numcita = '{}'".format(numcit)
-
-    #         cursor.execute(sql)
-    #         cursor.connection.commit()
-    #     except Exception as ex:
-    #         raise Exception(ex)
-
     #2.1 Sub-Bloque consultas
     
         # a. Pacientes
@@ -668,7 +670,7 @@ class ModelUser():
         try:
             cursor = db.connection.cursor()
 
-            sql = "SELECT id_doc FROM doc_examenes WHERE name_doc = '{}'".format(namedoc)
+            sql = "SELECT id_doc FROM doc_examenes WHERE name_doc = '{}' ORDER BY id_doc DESC".format(namedoc)
 
             cursor.execute(sql)
             row = cursor.fetchone()
@@ -700,12 +702,6 @@ class ModelUser():
         try:
             cursor = db.connection.cursor()
 
-            # sql = """SELECT `examenes`.`numexam`, `examenes`.`iduser`, `user_data`.`fullname`, `examenes`.`numcita`, `citas_agend`.`fecha`,`examenes`.`tipexam`, `examenes`.`fecexam`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
-            #          FROM `user_data`
-	        #             LEFT JOIN `examenes` ON `user_data`.`iduser` = `examenes`.`iduser` 
-            #             LEFT JOIN `citas_agend` ON `user_data`.`iduser` = `citas_agend`.`iduser`
-    	    #                 WHERE `examenes`.`numexam` = '{}' AND `citas_agend`.`status` = '1'""".format(numexam)
-
             sql = """SELECT `examenes`.`numexam`, `examenes`.`iduser`, `user_data`.`fullname`, `examenes`.`numcita`, `citas_agend`.`fecha`,`examenes`.`tipexam`, `examenes`.`fecexam`, `examenes`.`globulos_rojos`, `examenes`.`globulos_blancos`, `examenes`.`emoglobina`, `examenes`.`hematocrito`, `examenes`.`plaquetas`, `examenes`.`vcm`, `examenes`.`hcm`, `examenes`.`chcm`, `examenes`.`doc`
                      FROM `examenes`
 	                    LEFT JOIN `user_data` ON `examenes`.`iduser` = `user_data`.`iduser`
@@ -736,6 +732,21 @@ class ModelUser():
         except Exception as ex:
             raise Exception(ex)
 
+    # consultar examen
+    @classmethod
+    def consultnumdoc_staff(self, db, numexam):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "SELECT doc FROM examenes WHERE numexam = '{}'".format(numexam)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
     # actualizar registro
 
         #a. sin documento
@@ -760,20 +771,543 @@ class ModelUser():
 
 
 
-        #b. actualizar documento -por ahora en pruebas-
+        #b. actualizar documento -por ahora en pruebas- 
+    # Sub bloque para actualizar el documento
+
+        #Insertanddo el doc
+    # @classmethod
+    # def updtexam_doc_staff(self, db, namenewdoc, datanewdoc):
+    #     try:
+    #         cursor = db.connection.cursor()
+
+    #         sql = "INSERT INTO doc_examenes (name_doc, file_doc) VALUES (%s, %s)"
+            
+
+
+    #         cursor.execute(sql, (namenewdoc, datanewdoc))
+    #         cursor.connection.commit()
+    #     except Exception as ex:
+    #         raise Exception(ex)
+
+        #Borrando el anterior
     @classmethod
-    def updtexam_doc_staff(self, db, numdoc, namenewdoc, datanewdoc):
+    def delold_doc_staff(self, db, numdoc):
         try:
             cursor = db.connection.cursor()
+            sql = "DELETE FROM doc_examenes WHERE id_doc = '{}'".format(numdoc)
 
-            sql1 = "INSERT INTO doc_examenes (name_doc, file_doc) VALUES (%s, %s)"
-            sql2 = "DELETE FROM doc_examenes WHERE id_doc = '{}'".format(numdoc)
-
-
-            cursor.execute(sql1, (namenewdoc, datanewdoc))
-            cursor.connection.commit()
-
-            cursor.execute(sql2)
+            cursor.execute(sql)
             cursor.connection.commit()
         except Exception as ex:
             raise Exception(ex)
+
+
+
+
+# -- Citas
+
+    #Usuario
+
+
+
+    #Staff y administrador
+
+
+
+        #1- Vista Consulta todas las citas
+    @classmethod
+    def consultcit_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                     FROM `citas_agend`
+	                    LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` ORDER BY `citas_agend`.`numcita` DESC"""
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        #1.1 - Consulta Solicitud para Modal
+    @classmethod
+    def consultsolicmodal_staff(self, db, numsolic):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `citas_solic`.`numsolic` , `user_data`.`fullname`, `citas_solic`.`fecha_solic`, `citas_solic`.`acotaci_solic`, `citas_solic`.`statusnamesolic`
+                     FROM `citas_solic`
+	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` WHERE `citas_solic`.`numsolic` = '{}'""".format(numsolic)
+            
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+    #Sub bloque de filtrados
+        #Consulta solo por estado de cita
+    @classmethod
+    def concitS_staff(self, db, status):
+        try:
+            cursor = db.connection.cursor()
+            sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                     FROM `citas_agend`
+	                    LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` WHERE `citas_agend`.`status` = '{}' ORDER BY `citas_agend`.`numcita` DESC""".format(status)
+            
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Consulta con fechas y estado de cita
+    @classmethod
+    def concitfecS_staff(self, db, status, fecmin, fecmax):
+        try:
+            cursor = db.connection.cursor()
+
+            if fecmin and fecmax != None:
+                if (datetime.strptime(fecmin,'%Y/%m/%d')) > (datetime.strptime(fecmax,'%Y/%m/%d')):
+                    aux = fecmax
+                    fecmax = fecmin
+                    fecmin = aux
+                
+                sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                         FROM `citas_agend`
+	                        LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` WHERE `citas_agend`.`status` = '{0}' AND `citas_agend`.`fecha` BETWEEN '{1}' AND '{2}' ORDER BY `citas_agend`.`numcita` DESC""".format(status, fecmin, fecmax)
+            else:
+                if fecmin is None:
+                    sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                             FROM `citas_agend`
+	                            LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` WHERE `citas_agend`.`status` = '{0}' AND `citas_agend`.`fecha` < '{1}' ORDER BY `citas_agend`.`numcita` DESC""".format(status, fecmax)
+                else:
+                    sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                             FROM `citas_agend`
+	                            LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` WHERE `citas_agend`.`status` = '{0}' AND `citas_agend`.`fecha` > '{1}' ORDER BY `citas_agend`.`numcita` DESC""".format(status, fecmin)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+
+        except Exception as ex:
+            raise Exception(ex)
+
+        # Consulta sin estado y con fecmin y fecmax
+    @classmethod
+    def concitfec_staff(self, db, fecmin, fecmax):
+        try:
+            cursor = db.connection.cursor()
+
+            if fecmin and fecmax != None:
+                if (datetime.strptime(fecmin,'%Y/%m/%d')) > (datetime.strptime(fecmax,'%Y/%m/%d')):
+                    aux = fecmax
+                    fecmax = fecmin
+                    fecmin = aux
+                
+                sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                         FROM `citas_agend`
+	                        LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` WHERE `citas_agend`.`fecha` BETWEEN '{0}' AND '{1}' ORDER BY `citas_agend`.`numcita` DESC""".format(fecmin, fecmax)
+            else:
+                if fecmin is None:
+                    sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                             FROM `citas_agend`
+	                            LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` WHERE `citas_agend`.`fecha` < '{}' ORDER BY `citas_agend`.`numcita` DESC""".format(fecmax)
+                else:
+                    sql = """SELECT `citas_agend`.`numcita`, `citas_agend`.`fecha`, `citas_agend`.`tipexam`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`status`
+                             FROM `citas_agend`
+	                            LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser` WHERE `citas_agend`.`fecha` > '{}' ORDER BY `citas_agend`.`numcita` DESC""".format(fecmin)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    
+        #2- Ingresar
+    
+    @classmethod
+    def addcit_staff(self, db, idpac, solicitud, tipo, fecha):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "INSERT INTO citas_agend (fecha, iduser, numsolic, status, tipexam) VALUES ('{0}', '{1}', '{2}', '1', '{3}')".format(fecha, idpac, solicitud, tipo)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    #Sub bloque de consultas 
+        #Solicitudes recientes
+    @classmethod
+    def consultrensol_cit_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `citas_solic`.`numsolic` , `user_data`.`fullname` , `citas_solic`.`fecha_solic` , `citas_solic`.`tipexam` , `citas_solic`.`acotaci_solic`
+                     FROM `citas_solic`
+	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` 
+    	                    WHERE `citas_solic`.`statusnamesolic` = '2' ORDER BY `citas_solic`.`fecha_solic` ASC"""
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Pacientes con solicitudes sin completar
+    @classmethod
+    def consultpacsol_cit_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `citas_solic`.`iduser` , `user_data`.`fullname`
+                     FROM `citas_solic`
+	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` 
+    	                    WHERE `citas_solic`.`statusnamesolic` = '2'"""
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Fechas ocupadas por citas
+    @classmethod
+    def fecdisabled_cit_staff(self, db):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "SELECT fecha FROM citas_agend WHERE status = '1'"
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+        
+
+        #3- Editar
+
+    @classmethod
+    def updtcit_cit_staff(self, db, numcita, fecha, iduser, numsolic, status, tipexam):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "UPDATE citas_agend SET fecha = '{0}', iduser = '{1}', numsolic = '{2}', status = '{3}', tipexam = '{4}' WHERE numcita = '{5}'".format(fecha, iduser, numsolic, status, tipexam, numcita)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+    
+    #Sub bloque de consultas
+
+        #cita a editar
+    @classmethod
+    def consultcitedit_cit_staff(self, db, numcit):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `citas_agend`.`numcita`, `user_data`.`iduser`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`tipexam`, `citas_agend`.`fecha`, `citas_agend`.`status`
+                     FROM `citas_agend`
+	                    LEFT JOIN `user_data` ON `citas_agend`.`iduser` = `user_data`.`iduser`
+                        WHERE `citas_agend`.`numcita` = '{}'""".format(numcit)
+
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        #solicitud de esa cita
+    @classmethod
+    def consulteditsol_cit_staff(self, db, numsol):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `citas_solic`.`numsolic` , `user_data`.`fullname` , `citas_solic`.`fecha_solic` , `citas_solic`.`tipexam` , `citas_solic`.`acotaci_solic`
+                     FROM `citas_solic`
+	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` 
+    	                    WHERE `citas_solic`.`numsolic` = '{}' ORDER BY `citas_solic`.`fecha_solic`""".format(numsol)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    
+        #Fechas ocupadas por citas excluyendo la que se editara
+    @classmethod
+    def fecdisablededit_cit_staff(self, db, numcit):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "SELECT fecha FROM citas_agend WHERE status = '1' AND numcita <> '{}'".format(numcit)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+
+        #4- Borrar
+    @classmethod
+    def delcit_cit_staff(self, db, numcita):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "DELETE FROM citas_agend WHERE numcita = '{}'".format(numcita)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+
+        #5- Checkear cita
+    @classmethod
+    def checkcit_cit_staff(self, db, numcita):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = " UPDATE citas_agend SET status = '2' WHERE = '{}'".format(numcita)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+
+
+# -- Usuarios
+
+    #Sub bloque de consultas
+
+        #Correo ya registrado
+    @classmethod
+    def checkemail_admin(self, db, correo, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT iduser, username, email FROM user_data WHERE email = '{0}' AND iduser != '{1}'".format(correo, iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            if row == None:
+                return '1'
+            else:
+                return '0'
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Username ya registrado
+    @classmethod
+    def checkuser_admin(self, db, user, iduser):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT username FROM user_data WHERE username = '{0}' AND iduser != '{1}'".format(user, iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            if row == None:
+                return '1'
+            else:
+                return '0'
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Users para table
+    @classmethod
+    def consultusers_table(self, db):
+        try:
+            cursor = db.connection.cursor()
+            
+            sql = """SELECT `user_privilege`.`privilege`, `user_data`.`iduser`, `user_data`.`username`, `user_data`.`fullname`, `user_data`.`email`, `user_data`.`address`, `user_data`.`cellphone`
+                     FROM `user_data` LEFT JOIN `user_privilege` ON `user_data`.`iduser` = `user_privilege`.`iduser` 
+                        WHERE `user_privilege`.`privilege` = '3' OR `user_privilege`.`privilege` = '2';"""
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+        #User data para Modal
+    @classmethod
+    def consultdatauser(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = """SELECT `user_privilege`.`privilege`, `user_data`.`iduser`, `user_data`.`username`, `user_data`.`fullname`, `user_data`.`email`, `user_data`.`address`, `user_data`.`cellphone`
+                     FROM `user_data` LEFT JOIN `user_privilege` ON `user_data`.`iduser` = `user_privilege`.`iduser` WHERE `user_data`.`iduser` = '{}'""".format(iduser)
+
+            cursor.execute(sql)
+            row = cursor.fetchall()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    #Modificar
+
+        #Permisos
+    @classmethod
+    def updtprivilege_admin(self, db, iduser, privilege):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "UPDATE user_privilege SET privilege = '{0}' WHERE iduser = '{1}'".format(privilege, iduser)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Datos
+    @classmethod
+    def updtdata_admin(self, db, iduser, username, nombre, correo, direccion, celular):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "UPDATE user_data SET username = '{0}', fullname = '{1}', email = '{2}', address = '{3}', cellphone = '{4}' WHERE iduser = '{5}'".format(username, nombre, correo, direccion, celular, iduser)
+
+            cursor.execute(sql)
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+
+    #Borrar
+    @classmethod
+    def deleteuserdata_admin(self, db, iduser):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "DELETE FROM citas_solic WHERE iduser = '{}'".format(iduser)
+            cursor.execute(sql)
+
+            sql = "DELETE FROM citas_agend WHERE iduser = '{}'".format(iduser)
+            cursor.execute(sql)
+
+            sql = "DELETE FROM examenes WHERE iduser = '{}'".format(iduser)
+            cursor.execute(sql)
+
+            sql = "DELETE FROM user_privilege WHERE iduser = '{}'".format(iduser)
+            cursor.execute(sql)
+
+            sql = "DELETE FROM user_data WHERE iduser = '{}'".format(iduser)
+            cursor.execute(sql)
+
+            cursor.connection.commit()
+
+        except Exception as ex:
+            raise Exception(ex)
+
+
+    #Ingresar
+
+        #Datos
+    @classmethod
+    def gestuseradd_data_admin(self, db, username, password, fullname, email, address, genre, cellphone, profile_pic):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "INSERT INTO user_data (username, password, fullname, email, address, genre, cellphone, profile_pic) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+
+
+            cursor.execute(sql, (username, password, fullname, email, address, genre, cellphone, profile_pic))
+
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Privilegio
+    @classmethod
+    def gestuseradd_privilege_admin(self, db, iduser, privilegio):
+        try:
+            cursor = db.connection.cursor()
+
+            sql = "INSERT INTO user_privilege (iduser, privilege) VALUES ('{0}', '{1}')".format(iduser, privilegio)
+
+
+            cursor.execute(sql)
+
+            cursor.connection.commit()
+        except Exception as ex:
+            raise Exception(ex)
+
+
+    # Sub-bloque de consultas
+
+        #Usuario recien ingresado
+    @classmethod
+    def checkuser_addtwo_admin(self, db, username):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT iduser FROM user_data WHERE username = '{}'".format(username)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+
+        #Chequeo de correo
+    @classmethod
+    def checkemail_add_admin(self, db, correo):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT iduser, username, email FROM user_data WHERE email = '{}'".format(correo)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            if row == None:
+                return '1'
+            else:
+                return '0'
+        except Exception as ex:
+            raise Exception(ex)
+
+        #Username ya registrado
+    @classmethod
+    def checkuser_add_admin(self, db, username):
+        try:
+            cursor = db.connection.cursor()
+            sql = "SELECT username FROM user_data WHERE username = '{}'".format(username)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            if row == None:
+                return '1'
+            else:
+                return '0'
+        except Exception as ex:
+            raise Exception(ex)
+
+        

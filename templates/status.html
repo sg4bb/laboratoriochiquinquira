@@ -5,16 +5,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status de Citas</title>
+    <title>Exámenes</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 
-    <!-- Estilo CSS -->
+    <script src="https://rawgit.com/AuspeXeu/bootstrap-datetimepicker/master/js/bootstrap-datetimepicker.js"></script>
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <link href="https://rawgit.com/AuspeXeu/bootstrap-datetimepicker/master/css/bootstrap-datetimepicker.css"
+        rel="stylesheet" />
+
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -68,137 +83,357 @@
         }
     </style>
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" href="/docs/5.2/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-    <link rel="manifest" href="/docs/5.2/assets/img/favicons/manifest.json">
-    <link rel="mask-icon" href="/docs/5.2/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
-    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon.ico">
-    <meta name="theme-color" content="#712cf9">
-
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/80e990db18.js" crossorigin="anonymous"></script>
-
-
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="{{  url_for('static' , filename ='css/nose.css')  }}">
+    <link rel="stylesheet" href="{{  url_for('static' , filename ='css/dashboard.css')  }}">
+    <link rel="stylesheet" href="{{  url_for('static' , filename ='css/offcanvas.css')  }}">
 </head>
 
-{% extends "layout-user.html" %}
+<body>
 
-{% block content %}
+    <!-- Comprobacion de si se ejecuto una sentencia -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
 
-<body class="bg-light">
-    <br>
 
-    <div class="row align-items-md-stretch">
-        <div class="col-md-9">
-            <div class="bg-light p-5 rounded">
-                <div class="shadow-lg col-sm-auto py-4 mx-auto rounded-2">
-                    <div id="carouselExampleIndicators" class="carousel slide px-4" data-bs-ride="true">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                                class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                                aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                                aria-label="Slide 3"></button>
-                        </div>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="/static/img/mycarousel-1.jpg" alt="..." class="d-block w-100">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="/static/img/mycarousel-3.jpg" alt="..." class="d-block w-100">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="/static/img/mycarousel-1.jpg" alt="..." class="d-block w-100">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                </div>
+    <div class="toast align-items-center text-bg-{{ category }} border-0" role="alert" aria-live="assertive"
+        aria-atomic="true" data-delay="500" style="position: absolute; top: 62px; right: 10px;">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{message[9:]}}
             </div>
-        </div>
-
-        <div class="col-md-3 col-lg-3 py-5  order-last">
-            <div class="shadow-lg col-sm-auto py-2 px-2 rounded-2">
-                <img src="/static/img/mycarousel-2.jpg" alt="..." class="d-block w-100">
-            </div>
-
-            <div class="py-lg-5">
-                <div class="shadow-lg col-sm-auto py-2 px-2 rounded-2">
-                    <img src="/static/img/carousel-3.jpg" alt="..." class="d-block w-100">
-                </div>
-            </div>
-
-            <div class="py-lg-2">
-                <div class="shadow-lg col-sm-auto py-2 px-2 rounded-2">
-                    <figure class="text-end">
-                        <blockquote class="blockquote">
-                            <p class="text-justify"><small>“Calidad es nuestro lema”.</small></p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                            Platon <cite title="Source Title">1987</cite>
-                        </figcaption>
-                    </figure>
-                </div>
-            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
         </div>
     </div>
 
-    <hr class="my-4">
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
-    <table class="table table-striped-columns table-sm rounded-3">
-        <thead>
-            <tr>
-                <td><center>Fecha</center></td>
-                <td><center>Tipo</center></td>
-                <td><center>Completada</center></td>
-            </tr>    
-        </thead>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/">
+            <img src="static/img/logotest6.png" alt="Logo" width="30" height="22" class="d-inline-block align-text-top">
+            Chiquinquira
 
-        <tbody>
-            {% for citasagend in citas %}
-            <tr>
-                <td>{{ citasagend.0 }}</td>
-                {% if citasagend.1 == 1 %}
-                    <td>Hematologia</td>
-                {% endif %}
+        </a>
 
-                {% if citasagend.2 == 1 %}
-                <td><center></center></td>
-                {% endif %}
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder=""
+            aria-label="Search">
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="{{ url_for('logout') }}">Sign out</a>
+            </div>
+        </div>
+    </header>
 
-                {% if citasagend.2 == 2 %}
-                <td><center><i class="fa-solid fa-circle-check"></i></center></td>
-                {% endif %}
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3 sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/home">
+                                <span data-feather="home" class="align-text-bottom"></span>
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/status">
+                                <span data-feather="calendar" class="align-text-bottom"></span>
+                                Citas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/requestdate">
+                                <span data-feather="users" class="align-text-bottom"></span>
+                                Solicitar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/labtest">
+                                <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+                                Examenes
+                            </a>
+                        </li>
+                    </ul>
 
-                {% if citasagend.2 == 3 %}
-                <td><center>Pospuesta</center></td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span>Acciones</span>
+                        <a class="link-secondary" href="#" aria-label="Add a new report">
+                            <span data-feather="plus-circle" class="align-text-bottom"></span>
+                        </a>
+                    </h6>
+
+                    <!-- <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/requestdate/add">
+                                <span data-feather="file-plus" class="align-text-bottom"></span>
+                                Agregar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/requestdate/edit">
+                                <span data-feather="edit" class="align-text-bottom"></span>
+                                Editar
+                            </a>
+                        </li>
+                    </ul> -->
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="row align-items-md-stretch">
+                    <div class="col-md-7">
+
+                        <div class="col-sm-auto py-4 mx-auto">
+                            <div class="table-responsive border-0 py-5">
+                                <table class="table table-striped text-center table-responsive-md">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Tipo</th>
+                                            <th scope="col">Estado
+                                                <span type="" class="" data-bs-toggle="tooltip"
+                                                    data-bs-placement="right"
+                                                    data-bs-title="Check 'Realizada.' | Reloj 'En proceso.' | Octagono 'Pospuesta'"
+                                                    style="position:relative;">
+                                                    <span data-feather="help-circle" class="align-text-bottom"></span>
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for citasagend in citas %}
+
+                                        <tr>
+                                            <td>{{ citasagend.0 }}</td>
+                                            {% if citasagend.1 == 1 %}
+                                            <td>Hematología</td>
+                                            {% endif %}
+
+                                            {% if citasagend.2 == 1 %}
+                                            <td>
+                                                <span data-feather="clock" class="align-text-bottom"></span>
+                                            </td>
+                                            {% endif %}
+
+                                            {% if citasagend.2 == 2 %}
+                                            <td>
+                                                <span data-feather="check" class="align-text-bottom"></span>
+                                            </td>
+                                            {% endif %}
+
+                                            {% if citasagend.2 == 3 %}
+                                            <td>
+                                                <span data-feather="x-octagon" class="align-text-bottom"></span>
+                                            </td>
+                                            {% endif %}
+
+                                            <!-- <td>
+                                                    <a href="/editsolic/{{ citas.0 }}">
+                                                        <center><span data-feather="edit" class="align-text-bottom"></span></center>
+                                                    </a>
+                                                </td> -->
+                                        </tr>
+
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3 col-lg-4 py-5  order-last">
+
+                        <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg"
+                            style="background-image: url('unsplash-photo-1.jpg');">
+
+                            <h3 class="pt-2 mt-1 mb-1 mx-5 display-7 lh-1 fw-bold">Exámenes recientes</h3>
+                            <hr>
+
+                            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        {% if examen1 %}
+                                        <div class="container px-5">
+                                            <p>{{ examen1.0 }}</p>
+                                            <p>GR: {{ examen1.1 }}, GB: {{ examen1.2 }}, HG: {{ examen1.3 }}, HT: {{
+                                                examen1.4 }}</p>
+                                            <P>PQ: {{ examen1.5 }}, VCM: {{ examen1.6 }}, HCM: {{ examen1.7 }}, CHCM: {{
+                                                examen1.8 }}</P>
+                                        </div>
+                                        {% else %}
+                                        <div class="container px-5">
+                                            <p>ㅤ</p>
+                                            <p>ㅤ</p>
+                                            <p>ㅤ</p>
+                                        </div>
+                                        {% endif %}
+                                        <div class="d-flex flex-column h-100 p-5 pb-1 text-white text-shadow-1">
+
+                                            <ul class="d-flex list-unstyled mt-auto">
+                                                <li class="me-auto">
+                                                    <img src="https://github.com/twbs.png" alt="Bootstrap" width="32"
+                                                        height="32" class="rounded-circle border border-white">
+                                                </li>
+                                                <li class="d-flex align-items-center me-3">
+                                                    <svg class="bi me-2" width="1em" height="1em">
+                                                        <use xlink:href="#geo-fill" />
+                                                    </svg>
+                                                </li>
+                                                <li class="d-flex align-items-center pt-3">
+                                                    <svg class="bi me-2" width="1em" height="1em">
+                                                        <use xlink:href="#calendar3" />
+                                                    </svg>
+                                                    <small>Hace dos horas</small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    {% if examen2 %}
+                                    <div class="carousel-item">
+                                        <div class="container px-5">
+                                            <p>{{ examen2.0 }}</p>
+                                            <p>GR: {{ examen2.1 }}, GB: {{ examen2.2 }}, HG: {{ examen2.3 }}, HT: {{
+                                                examen2.4 }}</p>
+                                            <P>PQ: {{ examen2.5 }}, VCM: {{ examen2.6 }}, HCM: {{ examen2.7 }}, CHCM: {{
+                                                examen2.8 }}</P>
+                                        </div>
+
+                                        <div class="d-flex flex-column h-100 p-5 pb-1 text-white text-shadow-1">
+                                            <ul class="d-flex list-unstyled mt-auto">
+                                                <li class="me-auto">
+                                                    <img src="https://github.com/twbs.png" alt="Bootstrap" width="32"
+                                                        height="32" class="rounded-circle border border-white">
+                                                </li>
+                                                <li class="d-flex align-items-center me-3">
+                                                    <svg class="bi me-2" width="1em" height="1em">
+                                                        <use xlink:href="#geo-fill" />
+                                                    </svg>
+                                                </li>
+                                                <li class="d-flex align-items-center pt-3">
+                                                    <svg class="bi me-2" width="1em" height="1em">
+                                                        <use xlink:href="#calendar3" />
+                                                    </svg>
+                                                    <small>3 dias</small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if examen3 %}
+                                    <div class="carousel-item">
+                                        <div class="container px-5">
+                                            <p>{{ examen3.0 }}</p>
+                                            <p>GR: {{ examen3.1 }}, GB: {{ examen3.2 }}, HG: {{ examen3.3 }}, HT: {{
+                                                examen3.4 }}</p>
+                                            <P>PQ: {{ examen3.5 }}, VCM: {{ examen3.6 }}, HCM: {{ examen3.7 }}, CHCM: {{
+                                                examen3.8 }}</P>
+                                        </div>
+                                        <div class="d-flex flex-column h-100 p-5 pb-1 text-white text-shadow-1">
+                                            <ul class="d-flex list-unstyled mt-auto">
+                                                <li class="me-auto">
+                                                    <img src="https://github.com/twbs.png" alt="Bootstrap" width="32"
+                                                        height="32" class="rounded-circle border border-white">
+                                                </li>
+                                                <li class="d-flex align-items-center me-3">
+                                                    <svg class="bi me-2" width="1em" height="1em">
+                                                        <use xlink:href="#geo-fill" />
+                                                    </svg>
+                                                </li>
+                                                <li class="d-flex align-items-center pt-3">
+                                                    <svg class="bi me-2" width="1em" height="1em">
+                                                        <use xlink:href="#calendar3" />
+                                                    </svg>
+                                                    <small>2 semanas</small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {% endif%}
+                                </div>
+                                <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button"
+                                    data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <canvas class="my-4 w-100" id="myChart" width="435" height="293"></canvas>
+                    </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        crossorigin="anonymous"></script>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        feather.replace()
+    </script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                datasets: [{
+                    label: 'Horas de actividad',
+                    data: [2, 4, 2, 6, 1, 8],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Script para el tooltip -->
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+
+    <!-- Scripts para notificaciones -->
+    <script>
+        $(document).ready(function () {
+            $('.toast').toast('show');
+
+
+            $("#btnToasts").click(function () {
+                $("#toast1").toast('show');
+            });
+
+
+            $("#btnOcultar").click(function () {
+                $("#toast1").toast('hide');
+            });
+        });
+    </script>
 
 </body>
-
-{% endblock %}
 
 </html>

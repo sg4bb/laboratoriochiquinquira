@@ -1,0 +1,86 @@
+<div class="col-md-auto col-lg-12">
+    <form action="/gestuser" method="POST" class="needs-validation" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="row g-3">
+            <div class="col-6">
+                {% for userdata in user %}
+                <label for="privilegio" class="form-label">Privilegio</label>
+                <select class="form-select" aria-label="Default select example" name="privilegio" id="privilegio">
+                    <option selected value="{{ userdata.0 }},{{ userdata.1 }}">
+                        {% if userdata.0 == 1 %}
+                        Admin
+                        {% endif %}
+                        {% if userdata.0 == 2 %}
+                        Staff
+                        {% endif %}
+                        {% if userdata.0 == 3 %}
+                        Paciente
+                        {% endif %}
+                    </option>
+                    <option value="1,{{ userdata.1 }}">Admin</option>
+                    <option value="2,{{ userdata.1 }}">Staff</option>
+                    <option value="3,{{ userdata.1 }}">Paciente</option>
+                </select>
+                <div class="invalid-feedback">
+                    Privilegio invalido.
+                </div>
+            </div>
+
+            <div class="col-6">
+                <label for="cellphone" class="form-label">Celular</label>
+                <input type="text" class="form-control" name="cellphone" id="cellphone" value="{{ userdata.6 }}"
+                    placeholder="" required>
+                <div class="invalid-feedback">
+                    Se requiere el celular
+                </div>
+            </div>
+
+            <br>
+            <div class="col-6">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" value="{{ userdata.2 }}"
+                    placeholder="" required>
+                <div class="invalid-feedback">
+                    Se requiere un username
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="username" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="fullname" id="fullname" value="{{ userdata.3 }}" placeholder="" required>
+                <div class="invalid-feedback">
+                    Se requiere el nombre
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label for="username" class="form-label">Correo</label>
+                <input type="text" class="form-control" name="email" id="email" value="{{ userdata.4 }}" placeholder="" required>
+                <div class="invalid-feedback">
+                    Se requiere el correo
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label for="address" class="form-label">Dirección</label>
+                <input type="text" class="form-control" name="address" id="address" value="{{ userdata.5 }}"
+                    placeholder="" required>
+                <div class="invalid-feedback">
+                    Se requiere la dirección
+                </div>
+            </div>
+            {% endfor %}
+
+            <center>
+                <hr style="width:75%">
+            </center>
+
+            <center><small><cite> Al dar 'Guardar' los datos que cambiaste seran modificados.</cite></small></center>
+            <button type="submit" class="btn btn-lg btn-dark w-100 mx-0 mb-2">Guardar</button>
+            <button type="button" class="btn btn-lg btn-light w-100 mx-0" data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/form-validation.js') }}"></script>

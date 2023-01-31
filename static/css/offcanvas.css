@@ -46,3 +46,7 @@ body {
 .bg-purple {
   background-color: #383D39;
 }
+
+.btn-modal {
+  width: 50%;
+}

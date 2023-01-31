@@ -1,0 +1,16 @@
+{% for solicV in detsolic %}
+
+<p><mark>Fecha</mark> {{ solicV.2 }} </p>
+<p><mark>Paciente</mark> {{ solicV.1 }}</p>
+<p><mark>Numero de Solicitud</mark> {{ solicV.0 }} </p>
+<p><mark>Acotaciones</mark> {{ solicV.3 }} </p>
+
+{% if solicV.4 == 2 %}
+<p><mark>Estado</mark> En Proceso </p>
+{% endif %}
+
+{% if solicV.4 == 3 %}
+<p><mark>Estado</mark> Agendada </p>
+{% endif %}
+
+{% endfor %}

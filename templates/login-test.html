@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Laboratorio Chiquinquirá</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+    <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
+    <meta name="theme-color" content="#7952b3">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="{{  url_for('static' , filename ='css/signin.css')  }}">
+</head>
+
+<body>
+
+    <!-- Comprobacion de si se ejecuto una sentencia -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+
+    <div class="toast align-items-center text-bg-{{ category }} border-0" role="alert" aria-live="assertive"
+        aria-atomic="true" data-delay="500" style="position: absolute; top: 92px; right: 10px;">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{message[9:]}}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a href="/" class="d-flex align-items-center mb-2 py-2 mb-lg-0">
+                    <img src="/static/img/logotest6-white.png" alt="" width="40" height="32">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
+                    aria-label="Toggle navigation" id="navbarTogglerDemo" id="TogglerDemo">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+
+
+                    <ul
+                        class="navbar-nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 navbar-nav-scroll mx-2">
+                        <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+                        <li><a href="/membresias" class="nav-link px-2 text-white">Membresías</a></li>
+                        <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
+                        <li><a href="/about" class="nav-link px-2 text-white">Acerca de nosotros</a></li>
+                    </ul>
+
+                    <div class="text-end">
+                        <a href="/login" type="button" class="btn btn-outline-light me-2">
+                            Login
+                        </a>
+                        <a href="/register" type="button" class="btn btn-warning">
+                            Regístrate
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="text-center form-signin">
+        <form action="/check_user" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <img class="mb-4" src="/static/img/logotest6.png" alt="" width="72" height="57">
+            <h1 class="h3 mb-3 fw-normal">Iniciar sesión</h1>
+
+            <div class="form-floating">
+                <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username">
+                <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="password" class="form-control" id="floatingPassword"
+                    placeholder="Password">
+                <label for="floatingPassword">Contraseña</label>
+            </div>
+
+            <div class="checkbox mb-3">
+            </div>
+
+            <button class="w-100 btn btn-dark btn-lg" type="submit"><span data-feather="log-in"
+                    class="align-content-start py-0" style="position: relative; margin-bottom: 3px;"></span>
+                Continuar</button>
+            <br>
+            <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+        </form>
+    </main>
+
+    <!-- Scripts para notificaciones -->
+    <script>
+        $(document).ready(function () {
+            $('.toast').toast('show');
+
+
+            $("#btnToasts").click(function () {
+                $("#toast1").toast('show');
+            });
+
+
+            $("#btnOcultar").click(function () {
+                $("#toast1").toast('hide');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

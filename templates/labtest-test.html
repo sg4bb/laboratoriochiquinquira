@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examenes</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- Boostrap Datetimepicker -->
+    <script src="https://rawgit.com/AuspeXeu/bootstrap-datetimepicker/master/js/bootstrap-datetimepicker.js"></script>
+
+    <link href="https://rawgit.com/AuspeXeu/bootstrap-datetimepicker/master/css/bootstrap-datetimepicker.css"
+        rel="stylesheet" />
+
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
+
+
+    <!-- Estilo para plantilla -->
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{{  url_for('static' , filename ='css/dashboard.css')  }}">
+    <link rel="stylesheet" href="{{  url_for('static' , filename ='css/offcanvas.css')  }}">
+
+    <!-- Datepicker -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var today;
+            today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+
+            $("#datepicker").datetimepicker({
+                format: 'yyyy/mm/dd',
+                autoclose: true,
+                minView: 'month'
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <!-- Comprobacion de si se ejecuto una sentencia -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+
+
+    <div class="toast align-items-center text-bg-{{ category }} border-0" role="alert" aria-live="assertive"
+        aria-atomic="true" data-delay="500" style="position: absolute; top: 62px; right: 10px;">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{message[9:]}}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/">
+            <img src="static/img/logotest6.png" alt="Logo" width="30" height="22" class="d-inline-block align-text-top">
+            Chiquinquira
+
+        </a>
+
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder=""
+            aria-label="Search">
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="{{ url_for('logout') }}">Sign out</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3 sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/home">
+                                <span data-feather="home" class="align-text-bottom"></span>
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/status">
+                                <span data-feather="calendar" class="align-text-bottom"></span>
+                                Citas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/requestdate">
+                                <span data-feather="users" class="align-text-bottom"></span>
+                                Solicitar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/labtest">
+                                <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+                                Examenes
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span>Acciones</span>
+                        <a class="link-secondary" href="#" aria-label="Add a new report">
+                            <span data-feather="plus-circle" class="align-text-bottom"></span>
+                        </a>
+                    </h6>
+
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="book" class="align-text-bottom"></span>
+                                Filtrado
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Exámenes</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Exportar</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle me-2">
+                            <span data-feather="calendar" class="align-text-bottom"></span>
+                            Fecha
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle me-2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span data-feather="activity" class="align-text-bottom"></span>
+                            Filtrado
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark gap-1 p-2 rounded-3 mx-0 border-0 shadow w-220px">
+                            <li><a class="dropdown-item active rounded-2" href="/labtest/gr">Glóbulos Rojos</a></li>
+                            <li><a class="dropdown-item rounded-2" href="/labtest/gb">Glóbulos Blancos</a></li>
+                            <li><a class="dropdown-item rounded-2" href="/labtest/hmgb">Hemoglobina</a></li>
+                            <li><a class="dropdown-item rounded-2" href="/labtest/hmtc">Hematocritos</a></li>
+                            <li><a class="dropdown-item rounded-2" href="/labtest/plqt">Plaquetas</a></li>
+                            <li><a class="dropdown-item rounded-2" href="/labtest/vcm">VCM</a></li>
+                            <li><a class="dropdown-item rounded-2" href="/labtest/hcm">HCM</a></li>
+                            <li><a class="dropdown-item rounded-2" href="/labtest/chcm">CHCM</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+
+                <div class="table-responsive">
+                    <table class="table table-striped text-center table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">GR</th>
+                                <th scope="col">GB</th>
+                                <th scope="col">Emoglobina</th>
+                                <th scope="col">Hematocrito</th>
+                                <th scope="col">Plaquetas</th>
+                                <th scope="col">VCM</th>
+                                <th scope="col">HCM</th>
+                                <th scope="col">CHCM</th>
+                                <th scope="col">Documento PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr> -->
+
+                            {% for examenes in exams %}
+                            <tr>
+                                <td>{{ examenes.0 }}</td>
+                                {% if examenes.1 == 1 %}
+                                <td>Hematología</td>
+                                {% endif %}
+                                <td>{{ examenes.2 }}</td>
+                                <td>{{ examenes.3 }}</td>
+                                <td>{{ examenes.4 }}</td>
+                                <td>{{ examenes.5 }}</td>
+                                <td>{{ examenes.6 }}</td>
+                                <td>{{ examenes.7 }}</td>
+                                <td>{{ examenes.8 }}</td>
+                                <td>{{ examenes.9 }}</td>
+                                <form action="/download/{{ examenes.10 }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <td>{{ form.download() }}</td>
+                                </form>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- ChartJS -->
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['16/10/00', '3/11/04', '13/07/07', '18/02/10', '28/09/12', '29/02/19'],
+                datasets: [{
+                    label: 'Valor desconocido',
+                    data: [0, 4.5, 2.3, 5.2, 3, 1],
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Scripts para notificaciones -->
+    <script>
+        $(document).ready(function () {
+            $('.toast').toast('show');
+
+
+            $("#btnToasts").click(function () {
+                $("#toast1").toast('show');
+            });
+
+
+            $("#btnOcultar").click(function () {
+                $("#toast1").toast('hide');
+            });
+        });
+    </script>
+
+    <!-- Validacion Script -->
+    <script src="{{ url_for('static', filename='js/form-validation.js') }}"></script>
+
+    <!-- Dashboard -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+</body>
+
+</html>
