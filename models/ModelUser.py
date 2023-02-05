@@ -1311,3 +1311,38 @@ class ModelUser():
             raise Exception(ex)
 
         
+    #Modulo de consultas para correos
+    @classmethod
+    def consultenvio(self, db, idpac, solic):
+        try:
+            cursor = db.connection.cursor()
+            sql = """
+                SELECT `user_data`.`email`, `user_data`.`fullname`, `citas_agend`.`numsolic`, `citas_agend`.`fecha`
+                FROM `user_data` LEFT JOIN `citas_agend` ON `citas_agend`.`iduser` = `user_data`.`iduser` 
+                    WHERE `citas_agend`.`numsolic` = '{0}' AND `citas_agend`.`iduser` = '{1}'
+            """.format(solic, idpac)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)
+
+    #Modulo de consultas para correos
+    @classmethod
+    def consultenvio(self, db, idpac, cita):
+        try:
+            cursor = db.connection.cursor()
+            sql = """
+                SELECT `user_data`.`email`, `user_data`.`fullname`, `examenes`.`numcita`
+                FROM `user_data` LEFT JOIN `examenes` ON `examenes`.`iduser` = `user_data`.`iduser` 
+                    WHERE `examenes`.`numcita` = '{0}' AND `examenes`.`iduser` = '{1}'
+            """.format(cita, idpac)
+
+            cursor.execute(sql)
+            row = cursor.fetchone()
+
+            return row
+        except Exception as ex:
+            raise Exception(ex)

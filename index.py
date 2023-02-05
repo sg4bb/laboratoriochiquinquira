@@ -18,7 +18,7 @@ from io import BytesIO
 from werkzeug.security import check_password_hash, generate_password_hash
 
 #Herramienta para convertir Dates a String
-from datetime import datetime
+from datetime import datetime, date
 
 #Herramienta para convertir tuplas
 from functools import reduce
@@ -26,6 +26,8 @@ from functools import reduce
 #Herramienta para convertir a JSON
 import json
 
+# Correos
+from models.Correo import Correos
 # Modelos
 from models.ModelUser import ModelUser
 # Entidades
@@ -925,6 +927,14 @@ def gestexamadd():
             doc_id = ModelUser.consultdocexam_staff(db, file_name.filename)
             ModelUser.addexam_staff(db, idpac, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, doc_id)
 
+            #Correo
+            datacorreouser = ModelUser.consultenvio(db, idpac, cita)
+            correopac = datacorreouser[0]
+            nombrepac = datacorreouser[1]
+            cita = datacorreouser[2]
+            
+            Correos.NotifExamenes(correopac, nombrepac, cita)
+
             flash("Bien!    Examen agregado correctamente.")
             return (redirect(url_for('gestexam')))
     else:
@@ -1391,6 +1401,16 @@ def gestcitadd():
         fecha = request.form['fecha']
 
         ModelUser.addcit_staff(db, idpac, solicitud, tipo, fecha)
+
+        #Correo
+        datacorreouser = ModelUser.consultenvio(db, idpac, solicitud)
+        correo = datacorreouser[0]
+        nombre = datacorreouser[1]
+        solicitud = datacorreouser[2]
+        fecha = (datetime.strftime(datacorreouser[3], '%m/%d/%Y %H:%M:%S'))[:10]
+        hora = (datetime.strftime(datacorreouser[3], '%m/%d/%Y %H:%M:%S'))[12:]
+        Correos.NotifCitas(correo, nombre, solicitud, fecha, hora)
+
         flash("Bien!    Cita agregada correctamente.")
         return redirect(url_for('gestcit'))
     else:
@@ -1861,6 +1881,13 @@ def status_404(error):
 # -- Ruta para propositos de testeos.
 @app.route('/test')
 def test():
+    datacorreouser = ModelUser.consultenvio(db, '6', '3')
+    correo = datacorreouser[0]
+    nombre = datacorreouser[1]
+    solicitud = datacorreouser[2]
+    fecha = (datetime.strftime(datacorreouser[3], '%m/%d/%Y %H:%M:%S'))[:10]
+    hora = (datetime.strftime(datacorreouser[3], '%m/%d/%Y %H:%M:%S'))[12:]
+    Correos.NotifCitas('garbis1000@gmail.com', nombre, solicitud, fecha, hora)
     return render_template('test.html')
 
 @app.route('/protected')
