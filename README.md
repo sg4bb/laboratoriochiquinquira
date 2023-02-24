@@ -9,7 +9,3 @@ Notificaciones mediante las validaciones.
 Hasheo de Contraseña.
 Uso de metodos para sentencias.
 Login y rutas protegidas.
-
-Problemas que tengo:
-Login, Navbar, Register no son responsivos.
-Mejorar el diseño de las Notificaciones.
