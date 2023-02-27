@@ -59,7 +59,7 @@ class Correos():
             # Cuerpo
             cuerpo = """
             Estimado usuario {0} le notificamos del Laboratorio Chiquinquirá que su examen correspondiente a la cita {1} acaba de ser publicado.
-            Puede revisar su examen ingresando en el portal. Cualquier duda no dude en preguntarnos. ¡Gracias por preferirnos!
+            Puede revisar su examen ingresando en el portal. Cualquier inquietud no dude en preguntarnos. ¡Gracias por preferirnos!
             """.format(userfullname, numcita)
 
 

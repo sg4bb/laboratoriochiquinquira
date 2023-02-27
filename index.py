@@ -246,8 +246,8 @@ def labtestfiltergr():
 
         #Obtencion del item que desea filtrar
     valor = '1'
-    valmax = ['6000000', '6000000']
-    valmin = ['4000000', '4000000']
+    valmax = ['6000000', '6000000', '6000000', '6000000', '6000000', '6000000', '6000000', '6000000', '6000000', '6000000']
+    valmin = ['4000000', '4000000', '4000000', '4000000', '4000000', '4000000', '4000000', '4000000', '4000000', '4000000']
     val  = ' Globulos Rojos'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -274,8 +274,8 @@ def labtestfiltergb():
 
         #Obtencion del item que desea filtrar
     valor = '2'
-    valmax = ['10000', '10000']
-    valmin = ['4000', '4000']
+    valmax = ['10000', '10000', '10000', '10000', '10000', '10000', '10000', '10000', '10000', '10000']
+    valmin = ['4000', '4000', '4000', '4000', '4000', '4000', '4000', '4000', '4000', '4000', '4000']
     val  = ' Globulos Blancos'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -302,8 +302,8 @@ def labtestfilterhmgb():
 
         #Obtencion del item que desea filtrar
     valor = '3'
-    valmax = ['16', '16']
-    valmin = ['12', '12']
+    valmax = ['16', '16', '16', '16', '16', '16', '16', '16', '16', '16']
+    valmin = ['12', '12', '12', '12', '12', '12', '12', '12', '12', '12']
     val  = ' Hemoglobina'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -330,8 +330,8 @@ def labtestfilterhmtc():
 
         #Obtencion del item que desea filtrar
     valor = '4'
-    valmax = ['46', '46']
-    valmin = ['36', '36']
+    valmax = ['46', '46', '46', '46', '46', '46', '46', '46', '46', '46']
+    valmin = ['36', '36', '36', '36', '36', '36', '36', '36', '36', '36']
     val  = ' Hematocritos (%)'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -358,8 +358,8 @@ def labtestfilterplqt():
 
         #Obtencion del item que desea filtrar
     valor = '5'
-    valmax = ['450000', '450000']
-    valmin = ['150000', '150000']
+    valmax = ['450000', '450000', '450000', '450000', '450000', '450000', '450000', '450000', '450000', '450000']
+    valmin = ['150000', '150000', '150000', '150000', '150000', '150000', '150000', '150000', '150000', '150000']
     val  = ' Plaquetas'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -386,8 +386,8 @@ def labtestfiltervcm():
 
         #Obtencion del item que desea filtrar
     valor = '6'
-    valmax = ['100', '100']
-    valmin = ['80', '80']
+    valmax = ['100', '100', '100', '100', '100', '100', '100', '100', '100', '100']
+    valmin = ['80', '80', '80', '80', '80', '80', '80', '80', '80', '80']
     val  = ' Volumen Corpuscular Medio'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -414,8 +414,8 @@ def labtestfilterhcm():
 
         #Obtencion del item que desea filtrar
     valor = '7'
-    valmax = ['32', '32']
-    valmin = ['27', '27']
+    valmax = ['32', '32', '32', '32', '32', '32', '32', '32', '32', '32']
+    valmin = ['27', '27', '27', '27', '27', '27', '27', '27', '27', '27']
     val  = ' Hemoglobina Corpuscular Media'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -442,8 +442,8 @@ def labtestfilterchcm():
 
         #Obtencion del item que desea filtrar
     valor = '8'
-    valmax = ['36', '36']
-    valmin = ['31', '31']
+    valmax = ['36', '36', '36', '36', '36', '36', '36', '36', '36', '36']
+    valmin = ['31', '31', '31', '31', '31', '31', '31', '31', '31', '31']
     val  = ' Hemoglobina Corpuscular Media'
     filtervalue = ModelUser.consultvalor(db, valor, current_user.get_id())
 
@@ -928,7 +928,7 @@ def gestexamadd():
             ModelUser.addexam_staff(db, idpac, tipo, cita, fecha, gr, gb, emoglobina, hematocritos, plaquetas, vcm, hcm, chcm, doc_id)
 
             #Correo
-            datacorreouser = ModelUser.consultenvio(db, idpac, cita)
+            datacorreouser = ModelUser.consultenviocit(db, idpac, cita)
             correopac = datacorreouser[0]
             nombrepac = datacorreouser[1]
             cita = datacorreouser[2]
@@ -1403,7 +1403,10 @@ def gestcitadd():
         ModelUser.addcit_staff(db, idpac, solicitud, tipo, fecha)
 
         #Correo
+        print(idpac)
+        print(solicitud)
         datacorreouser = ModelUser.consultenvio(db, idpac, solicitud)
+        print(datacorreouser)
         correo = datacorreouser[0]
         nombre = datacorreouser[1]
         solicitud = datacorreouser[2]
@@ -1423,8 +1426,10 @@ def gestcitadd():
         elif userprivilege[1] == 2:
             #Renderizado de plantilla secretaria o Staff.
             solicitudes = ModelUser.consultrensol_cit_staff(db)
+            print(solicitudes)
             pacientes   = ModelUser.consultpacsol_cit_staff(db)
             fechasdisabled = ModelUser.fecdisabled_cit_staff(db)
+            print(fechasdisabled)
 
             #listas separadas Hora y Fecha
             fechasDisbFirst = []
@@ -1438,6 +1443,9 @@ def gestcitadd():
                     fechasDisbSecond.append(str(datetime.strftime(i[0], '%m/%d/%Y %H:%M:%S'))[12:13])
                 else:
                     fechasDisbSecond.append(str(datetime.strftime(i[0], '%m/%d/%Y %H:%M:%S'))[11:13])
+
+            print(fechasDisbFirst)
+            print(fechasDisbSecond)
 
             #Lista para fechas ocupadas
             fechasDisbld = []
@@ -1671,7 +1679,7 @@ def gestcitdel():
     #Checkear
 @app.route('/checkcit/<numcita>')
 def checkcit(numcita):
-    ModelUser.checksolic(db, numcita)
+    ModelUser.checkcit_cit_staff(db, numcita)
     flash("Bien!    Cita completada correctamente.")
     return (redirect(url_for('gestcit')))
 

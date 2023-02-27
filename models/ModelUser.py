@@ -952,7 +952,7 @@ class ModelUser():
         try:
             cursor = db.connection.cursor()
 
-            sql = """SELECT `citas_solic`.`numsolic` , `user_data`.`fullname` , `citas_solic`.`fecha_solic` , `citas_solic`.`tipexam` , `citas_solic`.`acotaci_solic`
+            sql = """SELECT `citas_solic`.`numsolic` , `user_data`.`fullname` , `citas_solic`.`fecha_solic` , `citas_solic`.`tipexam` , `citas_solic`.`acotaci_solic`, `user_data`.`cellphone`
                      FROM `citas_solic`
 	                    LEFT JOIN `user_data` ON `citas_solic`.`iduser` = `user_data`.`iduser` 
     	                    WHERE `citas_solic`.`statusnamesolic` = '2' ORDER BY `citas_solic`.`fecha_solic` ASC"""
@@ -1090,7 +1090,7 @@ class ModelUser():
         try:
             cursor = db.connection.cursor()
 
-            sql = " UPDATE citas_agend SET status = '2' WHERE = '{}'".format(numcita)
+            sql = " UPDATE citas_agend SET status = '2' WHERE numcita = '{}'".format(numcita)
 
             cursor.execute(sql)
             cursor.connection.commit()
@@ -1331,7 +1331,7 @@ class ModelUser():
 
     #Modulo de consultas para correos
     @classmethod
-    def consultenvio(self, db, idpac, cita):
+    def consultenviocit(self, db, idpac, cita):
         try:
             cursor = db.connection.cursor()
             sql = """
